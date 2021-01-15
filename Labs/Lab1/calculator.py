@@ -38,12 +38,16 @@ def multiply(a, b):
 def divide(a, b):
     """
     Finds the quotient of the two arguments.
+
+    Error is given if user tries to divide a by 0 (b is zero).
     :param a: an int, the dividend
     :param b: an int, the divisor
     :precondition: a must be an int
     :precondition: b must be an int
     :return: the quotient of a and b
     """
+    while b == 0:
+        b = int(input("divisor cannot be 0, enter new number: "))
     return a / b
 
 
@@ -75,14 +79,18 @@ def main():
           "4 to multiply \n"
           "5 to divide")
 
-    choice = int(input("your choice: "))
-    while choice > 5 or choice < 1:
+    user_input = input("your choice: ")
+
+    # check if input is an int from 1 to 5.
+    while not user_input.isnumeric() or int(user_input) > 5 or int(user_input) < 1:
         print("\ninvalid choice")
-        choice = int(input("your choice: "))
+        user_input = input("your choice: ")
+    choice = int(user_input)
 
     a = int(input("enter first number: "))
     b = int(input("enter second number: "))
 
+    # switch case using dictionary
     switcher = {
         1: hypotenuse.calculate_hypotenuse(a, b),
         2: sum(a, b),
