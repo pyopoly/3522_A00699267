@@ -12,4 +12,5 @@ calculator.py imports hypotenuse.py, and contains 4 additional calculation funct
 
 calculator.py prompts user to choose which calculation they want to perform, and asks for two inputs.
 The answer is then calculated and printed out.
+
 -------------------------------------------------
