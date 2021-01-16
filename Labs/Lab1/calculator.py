@@ -14,10 +14,8 @@ import hypotenuse
 def sum(a, b):
     """
     Finds the sum of the two arguments.
-    :param a: an int
-    :param b: an int
-    :precondition: a must be an int
-    :precondition: b must be an int
+    :param a: an int or float
+    :param b: an int or float
     :return: the sum of a and b
     """
     return a + b
@@ -26,10 +24,8 @@ def sum(a, b):
 def multiply(a, b):
     """
     Finds the product of the two arguments.
-    :param a: an int
-    :param b: an int
-    :precondition: a must be an int
-    :precondition: b must be an int
+    :param a: an int or float
+    :param b: an int or float
     :return: the product of a and b
     """
     return a * b
@@ -40,8 +36,8 @@ def divide(a, b):
     Finds the quotient of the two arguments.
 
     Error is given if user tries to divide a by 0 (b is zero).
-    :param a: an int, the dividend
-    :param b: an int, the divisor
+    :param a: an int or float, the dividend
+    :param b: an int or float, the divisor
     :precondition: a must be an int
     :precondition: b must be an int
     :return: the quotient of a and b
@@ -54,8 +50,8 @@ def divide(a, b):
 def subtract(a, b):
     """
     Finds the difference of the two arguments.
-    :param a: an int
-    :param b: an int
+    :param a: an int or float
+    :param b: an int or float
     :precondition: a must be an int
     :precondition: b must be an int
     :return: the different of a and b
@@ -69,7 +65,7 @@ def main():
 
     User chooses from finding the hypotenuse, addition, subtraction, multiplication, or division, and
     the result is calculated and printed out.
-    :precondition: inputs must be ints
+    :precondition: inputs must be ints or floats
     :return: none
     """
     print("Choose your desired operator:")
@@ -87,8 +83,8 @@ def main():
         user_input = input("your choice: ")
     choice = int(user_input)
 
-    a = int(input("enter first number: "))
-    b = int(input("enter second number: "))
+    a = float(input("enter first number: "))
+    b = float(input("enter second number: "))
 
     # switch case using dictionary
     switcher = {
@@ -99,7 +95,7 @@ def main():
         5: divide(a, b)
     }
     answer = switcher.get(choice, "invalid")
-    print("answer: {0} ".format(round(answer, 2)))
+    print("answer: {0}".format(round(answer, 2)))
 
 
 if __name__ == "__main__":

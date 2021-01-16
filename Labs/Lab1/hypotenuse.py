@@ -11,10 +11,8 @@ import math
 def calculate_hypotenuse(a, b):
     """
     Calculates the hypotenuse using the two arguments.
-    :param a: an int
-    :param b: an int
-    :precondition: a must be an int
-    :precondition: b must be an int
+    :param a: an int or float
+    :param b: an int or float
     :return: the hypotenuse of a and b
     """
     hypotenuse = math.sqrt(a ** 2 + b ** 2)
