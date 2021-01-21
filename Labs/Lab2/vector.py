@@ -18,6 +18,7 @@ class Vector:
         :param x_coordinate: an int for x
         :param y_coordinate: an int for y
         :param z_coordinate: an int for z
+        :return: none
         """
         self._x_coordinate = x_coordinate
         self._y_coordinate = y_coordinate
@@ -55,6 +56,7 @@ class Vector:
         Increase the coordinates of a vector by adding another vector to it. X-coordinate is summed with X-coordinate,
         and so on.
         :param vector: a vector to be added
+        :return: none
         """
         self.x += vector.x
         self.y += vector.y
@@ -78,6 +80,7 @@ class Vector:
         """
         Setter for the x-coordinate.
         :param x: an int for x
+        :return: none
         """
         self._x_coordinate = x
 
@@ -85,6 +88,7 @@ class Vector:
         """
         Setter for the y-coordinate.
         :param y: an int for y
+        :return: none
         """
         self._y_coordinate = y
 
@@ -92,7 +96,7 @@ class Vector:
         """
         Setter for the z-coordinate.
         :param z: an int for z
-        :return:
+        :return: none
         """
         self._z_coordinate = z
 

@@ -26,6 +26,7 @@ class Asteroid:
         :param circumference: a positive float or int
         :param position: a Vector representing x, y, z coordinates
         :param velocity: a Vector representing x, y, z coordinates
+        :return: none
         """
         self._circumference = circumference
         self._position = position
@@ -48,6 +49,7 @@ class Asteroid:
         """
         Change the velocity of the asteroid.
         :param new_velocity: a Vector
+        :return: none
         """
         self._velocity = new_velocity
 
@@ -63,7 +65,7 @@ class Asteroid:
         """
         Increments the global variable: num_asteroids_created by 1. And returns the newly incremented number.
         Used to give a unique ID to each asteroid.
-        :return:
+        :return: an int for the total number of asteroids
         """
         cls.__num_asteroids_created += 1
         return cls.__num_asteroids_created
