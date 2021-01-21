@@ -4,7 +4,7 @@ a 3D space.
 """
 
 __author__ = "Jack Shih"
-__version__ = "Winter 2021"
+__version__ = "Jan 2021"
 
 import random
 
