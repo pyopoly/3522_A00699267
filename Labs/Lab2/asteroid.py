@@ -37,10 +37,10 @@ class Asteroid:
         Move the asteroid by 1 second. New position is calculated base on adding the velocity to the current position.
         :return: the new position as a tuple
         """
-        old_position = self._position
+        old_pos = vector.Vector.copy(self._position)
         self._position.add(self._velocity)
         print("Asteroid {0} Moved! Old Pos: {1} -> New Pos: {2}".format(
-            self._asteroid_ID, old_position, self._position
+            self._asteroid_ID, old_pos, self._position
         ))
         return self._position.get_vector()
 
