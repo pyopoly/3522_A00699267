@@ -60,8 +60,7 @@ class Vector:
         ToString method.
         :return: a user-friendly formatted string depicting the x, y, z coordinates
         """
-        return "This vector has x, y, z coordinates: ({0}, {1}, {2}).".format(
-            self.x, self.y, self.z)
+        return "{0}, {1}, {2}".format(self.x, self.y, self.z)
 
     def set_x(self, x):
         """
