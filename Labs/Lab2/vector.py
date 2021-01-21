@@ -38,6 +38,18 @@ class Vector:
         z_coordinate = random.randint(0, z_range)
         return cls(x_coordinate, y_coordinate, z_coordinate)
 
+    @classmethod
+    def copy(cls, vector):
+        """
+        Initialize a Vector using another vector. This is essentially a copy method.
+        :param vector: a vector
+        :return: new vector with the same attributes
+        """
+        x_coordinate = vector.x
+        y_coordinate = vector.y
+        z_coordinate = vector.z
+        return cls(x_coordinate, y_coordinate, z_coordinate)
+
     def add(self, vector):
         """
         Increase the coordinates of a vector by adding another vector to it. X-coordinate is summed with X-coordinate,
