@@ -74,5 +74,5 @@ class Asteroid:
         ToString.
         :return: User-friendly formatted String that depicts the asteroid's attributes.
         """
-        return "Asteroid {0} is currently at {1} and moving at {2} meters per second. It has a circumference of {3}"\
+        return "Asteroid {0} is currently at {1} and moving at {2} metres per second. It has a circumference of {3}"\
             .format(self._asteroid_ID, self._position, self._velocity, self._circumference)
