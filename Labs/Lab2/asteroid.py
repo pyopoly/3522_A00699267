@@ -26,7 +26,6 @@ class Asteroid:
         :param circumference: a positive float or int
         :param position: a Vector representing x, y, z coordinates
         :param velocity: a Vector representing x, y, z coordinates
-        :return: none
         """
         self._circumference = circumference
         self._position = position

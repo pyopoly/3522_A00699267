@@ -18,7 +18,6 @@ class Vector:
         :param x_coordinate: an int for x
         :param y_coordinate: an int for y
         :param z_coordinate: an int for z
-        :return: none
         """
         self._x_coordinate = x_coordinate
         self._y_coordinate = y_coordinate
