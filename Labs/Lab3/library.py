@@ -1,20 +1,20 @@
 """ This module houses the library"""
 from book import Book
-
+from catalogue import Catalogue
 
 
 class Library:
     """
-    The Library consists of a list of books and provides an
+    The Library consists of a catalogue of books and provides an
     interface for users to check out, return and find books.
     """
 
-    def __init__(self, book_list):
+    def __init__(self, catalogue_of_books):
         """
-        Intialize the library with a list of books.
-        :param book_list: a sequence of book objects.
+        Initialize the library with a catalogue of books.
+        :param catalogue_of_books: a catalogue that contains a list of Books.
         """
-        self._book_list = book_list
+        self._book_catalogue = catalogue_of_books
 
     def check_out(self, call_number):
         """
@@ -22,9 +22,9 @@ class Library:
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
-        library_book = self._retrieve_book_by_call_number(call_number)
+        library_book = self._book_catalogue._retrieve_book_by_call_number(call_number)
         if library_book.check_availability():
-            status = self.reduce_book_count(call_number)
+            status = self._book_catalogue.reduce_book_count(call_number)
             if status:
                 print("Checkout complete!")
             else:
