@@ -1,5 +1,5 @@
 """ This module houses the library"""
-from book import Book
+# from book import Book
 from catalogue import Catalogue
 
 
@@ -9,12 +9,12 @@ class Library:
     interface for users to check out, return and find books.
     """
 
-    def __init__(self, catalogue_of_books):
+    def __init__(self, catalogue_of_items):
         """
         Initialize the library with a catalogue of books.
         :param catalogue_of_books: a catalogue that contains a list of Books.
         """
-        self._book_catalogue = catalogue_of_books
+        self._item_catalogue = catalogue_of_items
 
     def check_out(self, call_number):
         """
@@ -66,13 +66,13 @@ class Library:
             string_input = input("Please enter your choice (1-7)")
 
             # handle user pressing only enter in menu
-            if (string_input == ''):
+            if string_input == '':
                 continue
 
             user_input = int(string_input)
 
             if user_input == 1:
-                self.display_available_books()
+                self._item_catalogue.display_available_items()
                 user_input = input("Press Enter to continue")
             elif user_input == 2:
                 call_number = input("Enter the call number of the book"
@@ -84,7 +84,7 @@ class Library:
                 self.return_book(call_number)
             elif user_input == 4:
                 input_title = input("Enter the title of the book:")
-                found_titles = self.find_books(input_title)
+                found_titles = self._item_catalogue.find_items(input_title)
                 print("We found the following:")
                 if len(found_titles) > 0:
                     for title in found_titles:
@@ -93,11 +93,11 @@ class Library:
                     print("Sorry! We found nothing with that title")
 
             elif user_input == 5:
-                self.add_book()
+                self._item_catalogue.add_item()
 
             elif user_input == 6:
                 call_number = input("Enter the call number of the book")
-                self.remove_book(call_number)
+                self._item_catalogue.remove_item(call_number)
 
             elif user_input == 7:
                 pass
@@ -112,26 +112,29 @@ class Library:
 
 
 
-def generate_test_books():
+def generate_test_items():
     """
     Return a list of books with dummy data.
     :return: a list
     """
-    book_list = [
-        Book("100.200.300", "Harry Potter 1", 2, "J K Rowling"),
-        Book("999.224.854", "Harry Potter 2", 5, "J K Rowling"),
-        Book("631.495.302", "Harry Potter 3", 4, "J K Rowling"),
-        Book("123.02.204", "The Cat in the Hat", 1, "Dr. Seuss")
-    ]
-    return book_list
+    pass
+    # book_list = [
+    #     Book("100.200.300", "Harry Potter 1", 2, "J K Rowling"),
+    #     Book("999.224.854", "Harry Potter 2", 5, "J K Rowling"),
+    #     Book("631.495.302", "Harry Potter 3", 4, "J K Rowling"),
+    #     Book("123.02.204", "The Cat in the Hat", 1, "Dr. Seuss")
+    # ]
+    # return book_list
 
 
 def main():
     """
     Creates a library with dummy data and prompts the user for input.
     """
-    book_list = generate_test_books()
-    my_epic_library = Library(book_list)
+    # book_list = generate_test_books()
+    book_list = []
+    catalogue = Catalogue(book_list)
+    my_epic_library = Library(catalogue)
     my_epic_library.display_library_menu()
 
 

@@ -1,1 +1,0 @@
-# Journals have names, issue number, and a publisher),
