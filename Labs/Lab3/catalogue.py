@@ -17,7 +17,6 @@ class Catalogue:
         :param library_item_list: a sequence of library_item objects.
         """
         self._library_item_list = library_item_list
-        self._library_item_generator = LibraryItemGenerator()
 
     def find_items(self, title):
         """
@@ -36,7 +35,7 @@ class Catalogue:
         """
         Add a brand new item to the library with a unique call number.
         Redirects user to the LibraryItemGenerator for an UI to add different
-        library items.
+        library items. Calls LibraryItemGenerator's class method.
         """
         # First check if call number already exists.
         call_number = input("Enter Call Number: ")
@@ -46,7 +45,7 @@ class Catalogue:
                   f"{found_item.call_number}. It already exists. ")
         else:
             # Add the item with LibraryItemGenerator
-            new_item = self._library_item_generator.add_item(call_number)
+            new_item = LibraryItemGenerator.add_item(call_number)
             if new_item:
                 self._library_item_list.append(new_item)
                 print("item added successfully! item details:")
@@ -126,8 +125,9 @@ class Catalogue:
 
     def generate_test_items(self):
         """
-        Return a list of items with dummy data.
+        Returns a list of items with dummy data.
+        Calls LibraryItemGenerator's static method.
         :return: a list
         """
-        dummy_item_list = self._library_item_generator.generate_test_items()
+        dummy_item_list = LibraryItemGenerator.generate_test_items()
         self._library_item_list = dummy_item_list
