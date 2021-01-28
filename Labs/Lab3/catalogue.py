@@ -1,6 +1,12 @@
+"""
+Catalogue manages library items. It uses LibraryItemGenerator to prompt user with an UI to add
+different types of library items.
+"""
+
+__author__ = "Jack Shih"
+__version__ = "Jan 2021"
+
 import difflib
-# from item import item
-from library_item import LibraryItem
 from library_item_generator import LibraryItemGenerator
 
 
@@ -29,13 +35,17 @@ class Catalogue:
     def add_item(self):
         """
         Add a brand new item to the library with a unique call number.
+        Redirects user to the LibraryItemGenerator for an UI to add different
+        library items.
         """
+        # First check if call number already exists.
         call_number = input("Enter Call Number: ")
         found_item = self.retrieve_item_by_call_number(call_number)
         if found_item:
             print(f"Could not add item with call number "
                   f"{found_item.call_number}. It already exists. ")
         else:
+            # Add the item with LibraryItemGenerator
             new_item = self._library_item_generator.add_item(call_number)
             if new_item:
                 self._library_item_list.append(new_item)
@@ -58,7 +68,6 @@ class Catalogue:
         else:
             print(f"item with call number: {call_number} not found.")
 
-    # ==========
     def retrieve_item_by_call_number(self, call_number):
         """
         A private method that encapsulates the retrieval of an item with
