@@ -1,38 +1,84 @@
-# from book import Book
-# from journal import Journal
-# from dvd import DVD
+"""
+library_item_generator module manages LibraryItem types, such as DVD, Book, or Journal.
+"""
+
+__author__ = "Jack Shih"
+__version__ = "Jan 2021"
+
 import library_item
 
+
 class LibraryItemGenerator:
+    """
+    LibraryItemGenerator prompts user with an UI to select the type of library they want,
+    and then add that item. It also generates dummy data for the Library.
+    """
+
     def __init__(self):
-        self._list_of_item_types = ["Book", "DVD", "Journal"]
+        """
+        Initializes a list of different LibraryItem types.
+        """
+        self._list_of_item_types = [library_item.Book, library_item.DVD, library_item.Journal]
 
     def add_item(self, call_num):
+        """
+        Add a LibraryItem based on user's choice. Uses the types in self._list_of_item_types.
+        :param call_num: a string
+        :precondition call_number: a unique identifier
+        :return: a type of LibraryItem
+        """
+        # Exit number for the UI menu is one number higher than the total number of library item type
         exit_num = len(self._list_of_item_types) + 1
-        int_input = None
-        print("What type of item would you like to add?")
-        for i in range(len(self._list_of_item_types)):
-            print(f"{i + 1}. {self._list_of_item_types[i]}")
+        valid_choice_list = [exit_num]
+
+        self._print_menu(valid_choice_list)
         print(f"{exit_num}. Return")
-        while int_input not in (1, 2, 3, exit_num):
-            str_input = input("your choice: ")
-            if not str_input.isnumeric():
-                continue
-            int_input = int(str_input)
+
+        int_input = self._get_valid_user_input(valid_choice_list)
+
+        # Obtain item that the user chose
         if int_input != exit_num:
             item_type = self._list_of_item_types[int_input - 1]
-            print("item type: " + item_type)
-            return self._add_library_item_by_type(item_type, call_num)
+            print("item type: " + item_type.__name__)
+            title = input("Enter title: ")
+            num_copies = int(input("Enter number of copies "
+                                   "(positive number): "))
+            return item_type.init_library_item(call_num, title, num_copies)  # instantiate the LibraryItem
 
-    def _add_library_item_by_type(self, item_type, call_num):
-        if item_type not in self._list_of_item_types:
-            print("This library does not have this item type.")
-        else:
-            new_item = library_item.LibraryItem.generate_library_item(item_type, call_num)
-            return new_item
+    def _print_menu(self, valid_choice_list):
+        """
+        Gets the user choice. valid_choice_list is a list of ints that user can choose from.
+        Prints out the menu with the list of library item types. Append numbers to the
+        valid_choice_list depending on how many items are in the self._list_of_item_types.
+        :param valid_choice_list: list of ints
+        """
+        print("What type of item would you like to add?")
+        for i in range(len(self._list_of_item_types)):
+            name = self._list_of_item_types[i].__name__
+            print(f"{i + 1}. {name}")
+            valid_choice_list.append(i + 1)
+
+    def _get_valid_user_input(self, valid_choice_list):
+        """
+        Ensures that the user's choice is valid, that it is an int, and that it is in the
+        valid_choice list.
+        :param valid_choice_list: list of int
+        :return: an int, the user's choice
+        """
+        int_input = None
+        while int_input not in valid_choice_list:
+            str_input = input("your choice: ")
+            if not str_input.isnumeric():  # Ensure user input is an int
+                continue
+            int_input = int(str_input)
+        return int_input
 
     @staticmethod
     def generate_test_items():
+        """
+        Generate dummy data for the Library
+        :return: a list of Dummy LibraryItem
+        """
         book = library_item.Book
         dvd = library_item.DVD
         journal = library_item.Journal

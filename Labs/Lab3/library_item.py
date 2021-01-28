@@ -8,19 +8,6 @@ class LibraryItem(abc.ABC):
         self._num_copies = num_copies
 
     @classmethod
-    def generate_library_item(cls, item_type, call_num):
-        title = input("Enter title: ")
-        num_copies = int(input("Enter number of copies "
-                               "(positive number): "))
-
-        if item_type == "Book":
-            return Book.init_library_item(call_num, title, num_copies)
-        elif item_type == "DVD":
-            return DVD.init_library_item(call_num, title, num_copies)
-        elif item_type == "Journal":
-            return Journal.init_library_item(call_num, title, num_copies)
-
-    @classmethod
     @abc.abstractmethod
     def init_library_item(cls, call_num, title, num_copies):
         print("no such item")
@@ -129,7 +116,6 @@ class DVD(LibraryItem):
 
     @classmethod
     def init_library_item(cls, call_num, title, num_copies):
-        super().__init__(call_num, title, num_copies)
         release_date = input("Enter release date: ")
         region_code = input("Enter region code (0 - 8): ")
         return cls(call_num, title, num_copies, release_date, region_code)
