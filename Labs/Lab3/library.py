@@ -1,8 +1,14 @@
-""" This module houses the library"""
-# from item import item
+"""
+This module houses the library. The library uses a catalogue to manage its library items.
+Currently, there are Books, DVDs, and Journals in the library. The library provides the interface for the user,
+while the catalogue manages the Library_items.
+"""
+
+__author__ = "Jack Shih"
+__version__ = "Jan 2021"
+
 from catalogue import Catalogue
 
-import library_item
 
 class Library:
     """
