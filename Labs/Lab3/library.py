@@ -1,69 +1,70 @@
 """ This module houses the library"""
-# from book import Book
+# from item import item
 from catalogue import Catalogue
 
+import library_item
 
 class Library:
     """
-    The Library consists of a catalogue of books and provides an
-    interface for users to check out, return and find books.
+    The Library consists of a catalogue of items and provides an
+    interface for users to check out, return and find items.
     """
 
     def __init__(self, catalogue_of_items):
         """
-        Initialize the library with a catalogue of books.
-        :param catalogue_of_books: a catalogue that contains a list of Books.
+        Initialize the library with a catalogue of items.
         """
         self._item_catalogue = catalogue_of_items
 
     def check_out(self, call_number):
         """
-        Check out an book with the given call number from the library.
+        Check out an item with the given call number from the library.
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
-        library_book = self._book_catalogue._retrieve_book_by_call_number(call_number)
-        if library_book.check_availability():
-            status = self._book_catalogue.reduce_book_count(call_number)
+        item = self._item_catalogue.retrieve_item_by_call_number(call_number)
+        if item.check_availability():
+            status = self._item_catalogue.reduce_item_count(call_number)
             if status:
-                print("Checkout complete!")
+                print(f"Checkout complete for {type(item).__name__}: '{item.get_title()}'!")
             else:
-                print(f"Could not find book with call number {call_number}"
+                print(f"Could not find item with call number {call_number}"
                       f". Checkout failed.")
         else:
             print(f"No copies left for call number {call_number}"
                   f". Checkout failed.")
 
-    def return_book(self, call_number):
+    def return_item(self, call_number):
         """
-        Return an book with the given call number from the library.
+        Return an item with the given call number from the library.
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
-        status = self.increment_book_count(call_number)
+        status = self._item_catalogue.increment_item_count(call_number)
         if status:
-            print("book returned successfully!")
+            item = self._item_catalogue.retrieve_item_by_call_number(call_number)
+            print(f"{type(item).__name__}: '{item.get_title()}' returned successfully!")
         else:
-            print(f"Could not find book with call number {call_number}"
+            print(f"Could not find item with call number {call_number}"
                   f". Return failed.")
 
     def display_library_menu(self):
         """
         Display the library menu allowing the user to either access the
-        list of books, check out, return, find, add, remove a book.
+        list of items, check out, return, find, add, remove a item.
         """
         user_input = None
         while user_input != 7:
             print("\nWelcome to the Library!")
             print("-----------------------")
-            print("1. Display all books")
-            print("2. Check Out a book")
-            print("3. Return a book")
-            print("4. Find a book")
-            print("5. Add a book")
-            print("6. Remove a book")
+            print("1. Display all items")
+            print("2. Check Out a item")
+            print("3. Return a item")
+            print("4. Find a item")
+            print("5. Add a item")
+            print("6. Remove a item")
             print("7. Quit")
-            string_input = input("Please enter your choice (1-7)")
+            string_input = input("Please enter your choice (1-7): ")
 
             # handle user pressing only enter in menu
             if string_input == '':
@@ -75,17 +76,17 @@ class Library:
                 self._item_catalogue.display_available_items()
                 user_input = input("Press Enter to continue")
             elif user_input == 2:
-                call_number = input("Enter the call number of the book"
-                                    " you wish to check out.")
+                call_number = input("Enter the call number of the item"
+                                    " you wish to check out. ")
                 self.check_out(call_number)
             elif user_input == 3:
-                call_number = input("Enter the call number of the book"
-                                    " you wish to return.")
-                self.return_book(call_number)
+                call_number = input("Enter the call number of the item"
+                                    " you wish to return. ")
+                self.return_item(call_number)
             elif user_input == 4:
-                input_title = input("Enter the title of the book:")
+                input_title = input("Enter the title of the item: ")
                 found_titles = self._item_catalogue.find_items(input_title)
-                print("We found the following:")
+                print("We found the following: ")
                 if len(found_titles) > 0:
                     for title in found_titles:
                         print(title)
@@ -96,7 +97,7 @@ class Library:
                 self._item_catalogue.add_item()
 
             elif user_input == 6:
-                call_number = input("Enter the call number of the book")
+                call_number = input("Enter the call number of the item")
                 self._item_catalogue.remove_item(call_number)
 
             elif user_input == 7:
@@ -108,32 +109,13 @@ class Library:
         print("Thank you for visiting the Library.")
 
 
-
-
-
-
-def generate_test_items():
-    """
-    Return a list of books with dummy data.
-    :return: a list
-    """
-    pass
-    # book_list = [
-    #     Book("100.200.300", "Harry Potter 1", 2, "J K Rowling"),
-    #     Book("999.224.854", "Harry Potter 2", 5, "J K Rowling"),
-    #     Book("631.495.302", "Harry Potter 3", 4, "J K Rowling"),
-    #     Book("123.02.204", "The Cat in the Hat", 1, "Dr. Seuss")
-    # ]
-    # return book_list
-
-
 def main():
     """
     Creates a library with dummy data and prompts the user for input.
     """
-    # book_list = generate_test_books()
-    book_list = []
-    catalogue = Catalogue(book_list)
+    item_list = []
+    catalogue = Catalogue(item_list)
+    catalogue.generate_test_items()
     my_epic_library = Library(catalogue)
     my_epic_library.display_library_menu()
 

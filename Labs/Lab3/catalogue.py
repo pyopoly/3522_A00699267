@@ -3,6 +3,7 @@ import difflib
 from library_item import LibraryItem
 from library_item_generator import LibraryItemGenerator
 
+
 class Catalogue:
     def __init__(self, library_item_list):
         """
@@ -30,38 +31,18 @@ class Catalogue:
         Add a brand new item to the library with a unique call number.
         """
         call_number = input("Enter Call Number: ")
-        found_item = self._retrieve_item_by_call_number(call_number)
+        found_item = self.retrieve_item_by_call_number(call_number)
         if found_item:
             print(f"Could not add item with call number "
                   f"{found_item.call_number}. It already exists. ")
         else:
             new_item = self._library_item_generator.add_item(call_number)
-            # self._item_list.append(new_book)
             if new_item:
                 self._library_item_list.append(new_item)
                 print("item added successfully! item details:")
                 print(new_item)
             else:
                 print("item not added")
-            # print(new_book)
-
-        # call_number = input("Enter Call Number: ")
-        # title = input("Enter title: ")
-        # num_copies = int(input("Enter number of copies "
-        #                        "(positive number): "))
-        # book_data = (call_number, title, num_copies)
-        # author = input("Enter Author Name: ")
-        # new_book = Book(book_data[0], book_data[1], book_data[2], author)
-        #
-        # found_book = self._retrieve_book_by_call_number(
-        #     new_book.call_number)
-        # if found_book:
-        #     print(f"Could not add book with call number "
-        #           f"{new_book.call_number}. It already exists. ")
-        # else:
-        #     self._book_list.append(new_book)
-        #     print("book added successfully! book details:")
-        #     print(new_book)
 
     def remove_item(self, call_number):
         """
@@ -69,16 +50,16 @@ class Catalogue:
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
-        found_item = self._retrieve_item_by_call_number(call_number)
+        found_item = self.retrieve_item_by_call_number(call_number)
         if found_item:
-            self._item_list.remove(found_item)
+            self._library_item_list.remove(found_item)
             print(f"Successfully removed {found_item.get_title()} with "
                   f"call number: {call_number}")
         else:
             print(f"item with call number: {call_number} not found.")
 
     # ==========
-    def _retrieve_item_by_call_number(self, call_number):
+    def retrieve_item_by_call_number(self, call_number):
         """
         A private method that encapsulates the retrieval of an item with
         the given call number from the library.
@@ -98,8 +79,9 @@ class Catalogue:
         """
         print("items List")
         print("--------------", end="\n\n")
-        for library_item in self._item_list:
+        for library_item in self._library_item_list:
             print(library_item)
+            print()
 
     def reduce_item_count(self, call_number):
         """
@@ -110,7 +92,7 @@ class Catalogue:
         :return: True if the item was found and count decremented, false
         otherwise.
         """
-        library_item = self._retrieve_item_by_call_number(call_number)
+        library_item = self.retrieve_item_by_call_number(call_number)
         if library_item:
             library_item.decrement_number_of_copies()
             return True
@@ -126,9 +108,17 @@ class Catalogue:
         :return: True if the item was found and count incremented, false
         otherwise.
         """
-        library_item = self._retrieve_item_by_call_number(call_number)
+        library_item = self.retrieve_item_by_call_number(call_number)
         if library_item:
             library_item.increment_number_of_copies()
             return True
         else:
             return False
+
+    def generate_test_items(self):
+        """
+        Return a list of items with dummy data.
+        :return: a list
+        """
+        dummy_item_list = self._library_item_generator.generate_test_items()
+        self._library_item_list = dummy_item_list

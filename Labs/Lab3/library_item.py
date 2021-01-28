@@ -13,12 +13,12 @@ class LibraryItem(abc.ABC):
         num_copies = int(input("Enter number of copies "
                                "(positive number): "))
 
-        switch = {
-            "Book": Book.init_library_item(call_num, title, num_copies),
-            "DVD": DVD.init_library_item(call_num, title, num_copies),
-            "Journal": Journal.init_library_item(call_num, title, num_copies)
-        }
-        return switch.get(item_type, "no such item")
+        if item_type == "Book":
+            return Book.init_library_item(call_num, title, num_copies)
+        elif item_type == "DVD":
+            return DVD.init_library_item(call_num, title, num_copies)
+        elif item_type == "Journal":
+            return Journal.init_library_item(call_num, title, num_copies)
 
     @classmethod
     @abc.abstractmethod
@@ -99,7 +99,6 @@ class Book(LibraryItem):
 
     @classmethod
     def init_library_item(cls, call_num, title, num_copies):
-        super().__init__(call_num, title, num_copies)
         author = input("Enter Author Name: ")
         return cls(call_num, title, num_copies, author)
 
@@ -139,7 +138,7 @@ class DVD(LibraryItem):
         return f"---- DVD: {self.get_title()} ----\n" \
                f"Call Number: {self.call_number}\n" \
                f"Number of Copies: {self._num_copies}\n" \
-               f"Released: {self._release_date}" \
+               f"Released: {self._release_date}\n" \
                f"Region code: {self._region_code}"
 
 
@@ -163,7 +162,6 @@ class Journal(LibraryItem):
 
     @classmethod
     def init_library_item(cls, call_num, title, num_copies):
-        super().__init__(call_num, title, num_copies)
         issue_number = input("Enter issue number: ")
         publisher = input("Enter publisher: ")
         return cls(call_num, title, num_copies, issue_number, publisher)
@@ -172,5 +170,5 @@ class Journal(LibraryItem):
         return f"---- DVD: {self.get_title()} ----\n" \
                f"Call Number: {self.call_number}\n" \
                f"Number of Copies: {self._num_copies}\n" \
-               f"Issue number: {self._issue_number}" \
+               f"Issue number: {self._issue_number}\n" \
                f"Publisher: {self._publisher}"
