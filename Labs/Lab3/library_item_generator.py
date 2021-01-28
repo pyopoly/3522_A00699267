@@ -11,7 +11,8 @@ import library_item
 class LibraryItemGenerator:
     """
     LibraryItemGenerator prompts user with an UI to select the type of library they want,
-    and then add that item. Used as a static class by Catalogue.
+    and then add that item. Used as a static class by Catalogue. It contains Classes of Book,
+    DVD, and Journals, but not instances of them.
     It also generates dummy data for the Library.
     """
     _list_of_item_types = [library_item.Book, library_item.DVD, library_item.Journal]
