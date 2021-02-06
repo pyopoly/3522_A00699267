@@ -8,7 +8,7 @@ __author__ = "Jack Shih"
 __version__ = "Jan 2021"
 
 from catalogue import Catalogue
-
+from library_item import LibraryItem
 
 class Library:
     """
@@ -124,6 +124,7 @@ def main():
     catalogue.generate_test_items()
     my_epic_library = Library(catalogue)
     my_epic_library.display_library_menu()
+
 
 
 if __name__ == '__main__':
