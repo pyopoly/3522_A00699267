@@ -2,7 +2,8 @@ import difflib
 import pathlib
 from file_handler import FileHandler
 from file_handler import FileExtensions
-from file_handler import FileExtensionNotSupported
+from file_handler import InvalidFileTypeError
+
 
 class Dictionary:
     def __init__(self):
@@ -15,28 +16,32 @@ class Dictionary:
         try:
             extension = FileExtensions[file_segments[-1]]
         except KeyError:
-            raise FileExtensionNotSupported
+            raise InvalidFileTypeError
         data = FileHandler.load_date(filepath, extension)
         self._dictionary = data
 
     def query_definition(self, word):
-        matches = difflib.get_close_matches(word, self._dictionary, cutoff=0.5)
-        word = self.confirm_mutiple_words(matches)
-        if word is False:
-            raise NoSuchWord
         lines = [f"\n{word}"]
-        for i, definition in enumerate(self._dictionary[word], start=1):
-            lines.append(f"{i}. {definition}")
+        try:
+            for i, definition in enumerate(self._dictionary[word], start=1):
+                lines.append(f"{i}. {definition}")
+        except KeyError as e:
+            print(f"No such word: {e}")
+            return False
+        return lines
 
-        print(*lines, sep="\n")
+    def write_to_file(self, lines):
         FileHandler.write_lines('query_history.txt', lines)
 
-    def confirm_mutiple_words(self, words):
-        num_of_words = len(words)
+    def find_matches_in_dictionary(self, word):
+        matches = difflib.get_close_matches(word.lower(), self._dictionary, cutoff=0.5)
+        if not matches:
+            raise NoSuchWord
+        return matches
 
-        if num_of_words == 0:
-            return False
-        elif num_of_words == 1:
+    def confirm_multiple_words(self, words):
+        num_of_words = len(words)
+        if num_of_words == 1:
             return words[0]
         print(f"{len(words)} words are found:")
         for i, word in enumerate(words, start=1):
@@ -60,9 +65,15 @@ class Dictionary:
             if word == "exitprogram":
                 break
             try:
-                self.query_definition(word)
+                matches = self.find_matches_in_dictionary(word)
             except NoSuchWord as e:
                 print(e)
+            else:
+                word = self.confirm_multiple_words(matches)
+                definition = self.query_definition(word)
+                self.write_to_file(definition)
+                print(*definition, sep="\n")
+
 
 class NoSuchWord(ValueError):
     def __init__(self):
@@ -71,8 +82,8 @@ class NoSuchWord(ValueError):
 def main():
     dictionary = Dictionary()
     try:
-        dictionary.load_dictionary("")
-    except FileExtensionNotSupported as e:
+        dictionary.load_dictionary("data.json")
+    except InvalidFileTypeError as e:
         print(e)
     except FileNotFoundError:
         print("No such file was found")

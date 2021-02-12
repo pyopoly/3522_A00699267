@@ -7,7 +7,4 @@ class TestFileHandler(TestCase):
         FileHandler.write_lines("test.txt", lines)
         with open("test.txt", mode='r', encoding="utf-8") as file:
             file = file.read().splitlines()
-            file.reverse()
-            lines.reverse()
-            for i in range(0, len(lines)):
-                self.assertEqual(file[i], lines[i])
+            self.assertEqual(file[-5:], lines)
