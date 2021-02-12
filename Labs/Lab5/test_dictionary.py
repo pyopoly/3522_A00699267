@@ -1,3 +1,10 @@
+"""
+Unit Testing to test methods in Dictionary.
+"""
+
+__author__ = "Jack Shih"
+__version__ = "Feb 2021"
+
 from unittest import TestCase
 from dictionary import Dictionary
 from file_handler import InvalidFileTypeError
@@ -51,5 +58,3 @@ class TestDictionary(TestCase):
         dictionary.load_dictionary("data.json")
         self.assertRaises(NoSuchWordError, lambda: dictionary.find_matches_in_dictionary(""))
 
-    # def test_confirm_multiple_words(self):
-    #     self.fail()
