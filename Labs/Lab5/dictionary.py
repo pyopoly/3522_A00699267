@@ -89,6 +89,7 @@ class Dictionary:
 
     def confirm_multiple_words(self, words):
         """
+        Returns a word out of a list of words.
         Prints out a menu of words for the user to choose from. And takes that input and returns the chosen word.
         :param words: list of strings
         :return: string
@@ -102,7 +103,7 @@ class Dictionary:
 
         while True:
             try:
-                choice = int(input("which word is the correct choice? "))
+                choice = int(self.get_input("which word is the correct choice? "))
             except ValueError:
                 print(f"please choose from 1 to {num_of_words}")
             else:
@@ -132,6 +133,15 @@ class Dictionary:
                 definition = self.query_definition(word)
                 self.write_to_file(definition)
                 print(*definition, sep="\n")
+
+    @staticmethod
+    def get_input(msg):
+        """
+        Assistant method for unit testing purposes.
+        :param msg: a string
+        :return: string that user entered as input
+        """
+        return input(msg)
 
 
 class NoSuchWordError(ValueError):
