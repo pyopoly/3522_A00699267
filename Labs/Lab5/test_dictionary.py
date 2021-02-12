@@ -1,7 +1,7 @@
 from unittest import TestCase
 from dictionary import Dictionary
 from file_handler import InvalidFileTypeError
-from dictionary import NoSuchWord
+from dictionary import NoSuchWordError
 
 
 class TestDictionary(TestCase):
@@ -49,7 +49,7 @@ class TestDictionary(TestCase):
     def test_find_matches_in_dictionary_no_match(self):
         dictionary = Dictionary()
         dictionary.load_dictionary("data.json")
-        self.assertRaises(NoSuchWord, lambda: dictionary.find_matches_in_dictionary(""))
+        self.assertRaises(NoSuchWordError, lambda: dictionary.find_matches_in_dictionary(""))
 
     # def test_confirm_multiple_words(self):
     #     self.fail()
