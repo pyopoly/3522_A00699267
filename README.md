@@ -34,3 +34,27 @@ library_item.py : Items in the Library. LibraryItem is the parent class. Book, D
 library_item_generator.py : Helper class for Catalogue. Produces a menu for user to choose which type of LibraryItem to add.
 
 -------------------------------------------------
+Lab4: \
+author: Tegvaran Sooch & Jack Shih
+
+Summary: Lab4 is part 1 of assignment1. fam.py is the main class to start the program.
+The program can: View Budget, Record transactions, View Transactions.\
+View Transactions by Budget does not work yet. It only displays all transactions of the user.\
+Users have no types yet.\
+Budget has not been defined yet.
+
+fam.py: Main class to start the program.\
+ui.py: Menu selection for the user\
+bank_account.py: Contains banking information including transactions.\
+
+-------------------------------------------------
+Lab5:\
+Objective: To get familiar with writing and reading a file. Raise and catching exceptions, and unit test the code.\
+Summary: Load a dictionary file and prompt the user to search a word in the dictionary file. Print the definition of that word and also save it in a query_history.txt file.
+
+dictionary.py: \
+Dictionary.start_dictionary() -> prompt user for a word -> find_matches_in_dictionary (return list of possible words) -> confirm_multiple_words (user picks one word in the list) -> query_definition (query the word in the dictionary) -> write_to_file -> print definition\
+file_handler.py: \
+contains methods related to reading and writing to a file. Json and Txt files are supported.
+
+-------------------------------------------------
