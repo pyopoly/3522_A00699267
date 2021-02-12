@@ -1,4 +1,5 @@
 import difflib
+import pathlib
 from file_handler import FileHandler
 from file_handler import FileExtensions
 from file_handler import FileExtensionNotSupported
@@ -8,6 +9,8 @@ class Dictionary:
         self._dictionary = None
 
     def load_dictionary(self, filepath):
+        if not pathlib.Path(filepath).exists() or not filepath:
+            raise FileNotFoundError
         file_segments = filepath.upper().split('.')
         try:
             extension = FileExtensions[file_segments[-1]]
@@ -68,7 +71,7 @@ class NoSuchWord(ValueError):
 def main():
     dictionary = Dictionary()
     try:
-        dictionary.load_dictionary("data.json")
+        dictionary.load_dictionary("")
     except FileExtensionNotSupported as e:
         print(e)
     except FileNotFoundError:

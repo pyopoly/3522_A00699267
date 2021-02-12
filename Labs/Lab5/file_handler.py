@@ -12,11 +12,9 @@ class FileHandler:
             raise FileExtensionNotSupported()
 
         if file_extension == FileExtensions["TXT"]:
-            print("text file detected")
             with open(path, mode='r', encoding='utf-8') as text_file:
                 return text_file.read()
         elif file_extension == FileExtensions["JSON"]:
-            print("json file detected")
             with open(path, mode='r', encoding='utf-8') as json_file:
                 return json.load(json_file)
 
