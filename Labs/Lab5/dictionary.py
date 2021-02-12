@@ -79,7 +79,10 @@ class Dictionary:
         :return: list of string
         """
         matches = difflib.get_close_matches(word.lower(), self._dictionary, cutoff=0.5)
-        matches.extend(difflib.get_close_matches(word, self._dictionary, cutoff=0.5))
+        matches_unchanged = (difflib.get_close_matches(word, self._dictionary, cutoff=0.5))
+        for word in matches_unchanged:
+            if word not in matches:
+                matches.append(word)
         if not matches:
             raise NoSuchWordError
         return matches
@@ -147,6 +150,7 @@ def main():
     dictionary = Dictionary()
     try:
         dictionary.load_dictionary("data.json")
+        # dictionary.load_dictionary("data.txt")
     except InvalidFileTypeError as e:
         print(e)
     except FileNotFoundError:
