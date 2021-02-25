@@ -68,3 +68,17 @@ class InvalidFileTypeError(OSError):
         super().__init__("This file extension is not supported. "
                          "Supported extension is a enum value in file_handler.FileExtensions")
 
+
+
+
+with open("test.txt", mode='r', encoding='utf-8') as file:
+    # d = file.read(9)
+    # file.seek(-10, 2)
+    d = file.read()
+    print(d)
+    file.seek(1)
+    print(file.tell())
+    d = file.read()
+    print(d)
+    # for line in lines:
+    #     file.write(f"\n{line}")
