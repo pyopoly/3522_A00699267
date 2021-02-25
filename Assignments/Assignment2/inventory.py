@@ -1,3 +1,7 @@
+class Product:
+    productID = None
+    name = "Product Name"
+    description = "Product Description"
 
 
 class Toy:
