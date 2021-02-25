@@ -5,7 +5,7 @@ This module contains the FAM class. Which is the main Class for this F.A.M. prog
 __author__ = "Jack Shih & Tegvaran Sooch"
 __version__ = "Feb 2021"
 
-from Assignment1.user import Angel, Troublemaker, Rebel
+from user import Angel, Troublemaker, Rebel
 from ui import UI
 
 
