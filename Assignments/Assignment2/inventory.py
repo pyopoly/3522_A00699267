@@ -21,12 +21,16 @@ class Inventory:
     def check_item_in_inventory(self, order):
         id = order.product_id
         amount = order.quantity_required()
-        if self.item_in_inventory(id) and self.enough_stock(id, amount):
-            self.reduce_stock(id, amount)
+        if self.item_in_inventory(id):
+            if self.enough_stock(id, amount):
+                self.reduce_stock(id, amount)
+            else:
+                self.replenish_stock_by_100(id)
             # reduce stock
         else:
-            product = self[id]
-            self.purchase_item(product)
+            # product = self[id]
+            # make new item from order
+            self.purchase_100_item(order)
             # purchase stock
 
     def __contains__(self, product_id):
@@ -52,7 +56,12 @@ class Inventory:
     def reduce_stock(self, product_id, amount):
         self[product_id].reduce_stock(amount)
 
-    def purchase_item(self, product_id):
+    def replenish_stock_by_100(self, order):
+        self[product_id].stock += 100
+
+
+    def purchase_100_item(self, product):
+        pass
 
 
 class Product:
@@ -70,7 +79,10 @@ class Product:
     def get_stock(self):
         return self._stock
 
-    stock = property(get_stock)
+    def set_stock(self, amount):
+        self._stock = amount
+
+    stock = property(get_stock, set_stock)
 
 class Toy:
     battery_operated = None

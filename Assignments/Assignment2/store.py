@@ -61,6 +61,9 @@ class Order:
     def quantity_required(self):
         return self._details['quantity']
 
+    def purchase_item(self):
+        self._factory.create_item()
+
     product_id = property(get_product_id)
 
 
