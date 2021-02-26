@@ -13,12 +13,64 @@ class ProductName(Enum):
     Robot_Bunny = auto()
 
 
-class Product:
-    productID = None
-    name = "Product Name"
-    description = "Product Description"
-    stock = 0
+class Inventory:
+    def __init__(self):
+        self._products = []
 
+
+    def check_item_in_inventory(self, order):
+        id = order.product_id
+        amount = order.quantity_required()
+        if self.item_in_inventory(id) and self.enough_stock(id, amount):
+            self.reduce_stock(id, amount)
+            # reduce stock
+        else:
+            product = self[id]
+            self.purchase_item(product)
+            # purchase stock
+
+    def __contains__(self, product_id):
+        for product in self._products:
+            if product.product_id == product_id:
+                return True
+        return False
+
+    def __getitem__(self, product_id):
+        for product in self._products:
+            if product.product_id == product_id:
+                return product
+        else:
+            return None
+
+    def item_in_inventory(self, product_id):
+        return product_id in Inventory
+
+    def enough_stock(self, product_id, amount):
+        product = self[product_id]
+        return amount <= product.stock
+
+    def reduce_stock(self, product_id, amount):
+        self[product_id].reduce_stock(amount)
+
+    def purchase_item(self, product_id):
+
+
+class Product:
+    # product_id = None
+    # name = "Product Name"
+    # description = "Product Description"
+    # stock = 0
+
+    def __init__(self):
+        self._product_id = None
+        self._name = "Product Name"
+        self._description = "Product Description"
+        self._stock = 0
+
+    def get_stock(self):
+        return self._stock
+
+    stock = property(get_stock)
 
 class Toy:
     battery_operated = None

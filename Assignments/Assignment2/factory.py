@@ -9,6 +9,18 @@ class Factory(AbstractFactory):
     pass
 
 
+class ChristmasFactory(Factory):
+    pass
+
+
+class HalloweenFactory(Factory):
+    pass
+
+
+class EasterFactory(Factory):
+    pass
+
+
 class ToyFactory(Factory):
     pass
 
