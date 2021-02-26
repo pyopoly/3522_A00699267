@@ -1,5 +1,5 @@
 import pandas
-from factory import ChristmasFactory, HalloweenFactory, EasterFactory
+from factory import ChristmasFactory, HalloweenFactory, EasterFactory, ProductType
 from inventory import Inventory
 
 class Store:
@@ -58,13 +58,18 @@ class Order:
     def get_product_id(self):
         return self._product_id
 
+    # def get_item_type(self):
+    #     return self._item
+
     def quantity_required(self):
         return self._details['quantity']
 
     def purchase_item(self):
-        self._factory.create_item()
+        f = self._factory()
+        return f.create_item(self._item)
 
     product_id = property(get_product_id)
+    # item_type = property(get_item_type)
 
 
 class Report:

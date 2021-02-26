@@ -1,6 +1,7 @@
 class UI:
 
-    def menu(self):
+    @staticmethod
+    def menu(store):
         print("1. Process Web Orders\n"
               "2. Check Inventory\n"
               "3. Exit")
@@ -8,12 +9,12 @@ class UI:
         choice = UI.get_valid_input(prompt, 3)
 
         switch = {
-            1: "choice1",
+            1: store.process_order,
             2: "choice2",
             3: "choice3"
         }
 
-        result = switch.get(choice)
+        result = switch.get(choice)()
         print(result)
 
     @staticmethod
@@ -45,6 +46,3 @@ class UI:
             else:
                 return string_input
 
-
-ui = UI()
-ui.menu()
