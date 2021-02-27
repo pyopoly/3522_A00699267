@@ -2,19 +2,20 @@ import pandas
 from factory import ChristmasFactory, HalloweenFactory, EasterFactory, ProductType
 from inventory import Inventory
 
+
 class Store:
-    def __init__(self, inventory):
-        self._inventory = inventory
+    def __init__(self, inventory_manager):
+        # self._inventory = inventory
+        self._inventory_manager = inventory_manager
         self._order_processor = OrderProcessor()
 
     def download_orders(self, filepath):
         pass
 
-
-    def process_order(self):
+    def process_orders(self):
         orders = self._order_processor.read_order()
         for order in orders:
-            self._inventory.check_item_in_inventory(order)
+            self._inventory_manager.process_order(order)
 
 
 class OrderProcessor:
@@ -33,13 +34,13 @@ class OrderProcessor:
 
     class FactoryMapping:
         factories = [ChristmasFactory, HalloweenFactory, EasterFactory]
+
         @classmethod
         def find_factory(cls, holiday):
             factory_type = holiday + "Factory"
             for factory in cls.factories:
                 if factory.__name__ == factory_type:
                     return factory
-
 
 
 class Order:
@@ -58,18 +59,30 @@ class Order:
     def get_product_id(self):
         return self._product_id
 
-    # def get_item_type(self):
-    #     return self._item
+    def get_name(self):
+        return self._name
+
+    def get_item_type(self):
+        return self._item
+
+    def get_factory(self):
+        return self._factory
+
+    def get_details(self):
+        return self._details
 
     def quantity_required(self):
         return self._details['quantity']
 
-    def purchase_item(self):
-        f = self._factory()
-        return f.create_item(self._item)
+    # def purchase_item(self):
+    #     f = self._factory()
+    #     return f.create_item(self._item)
 
     product_id = property(get_product_id)
-    # item_type = property(get_item_type)
+    name = property(get_name)
+    factory = property(get_factory)
+    item_type = property(get_item_type)
+    item_details = property(get_details)
 
 
 class Report:

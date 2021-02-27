@@ -1,9 +1,10 @@
 from store import Store
-from inventory import Inventory
+from inventory import Inventory, InventoryManager
 from ui import UI
 def main():
     inventory = Inventory()
-    store = Store(inventory)
+    inventory_manager = InventoryManager(inventory)
+    store = Store(inventory_manager)
     UI.menu(store)
 
 

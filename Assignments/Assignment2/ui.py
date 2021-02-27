@@ -9,13 +9,12 @@ class UI:
         choice = UI.get_valid_input(prompt, 3)
 
         switch = {
-            1: store.process_order,
+            1: store.process_orders,
             2: "choice2",
             3: "choice3"
         }
 
-        result = switch.get(choice)()
-        print(result)
+        switch.get(choice)()
 
     @staticmethod
     def get_valid_input(prompt, num_of_choices):
