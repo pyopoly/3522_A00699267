@@ -5,7 +5,8 @@ def main():
     inventory = Inventory()
     inventory_manager = InventoryManager(inventory)
     store = Store(inventory_manager)
-    UI.menu(store)
+    ui = UI(store)
+    ui.menu()
 
 
 if __name__ == "__main__":

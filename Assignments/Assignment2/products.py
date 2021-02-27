@@ -42,6 +42,10 @@ class Product:
     #         return self._product_id == other.id
 
     # stock = property(get_stock, set_stock)
+
+    def __str__(self):
+        return f"{self._name}"
+
     id = property(get_id)
 
 

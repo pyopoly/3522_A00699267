@@ -50,7 +50,6 @@ class EasterFactory(Factory):
             ProductType.Candy: CremeEgg
         }
         item = switch[ProductType[order.item_type]]
-        print("x", item)
         return item(product_id=order.product_id, name=order.name, **order.item_details)
 
 # class ToyFactory(Factory):

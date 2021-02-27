@@ -17,6 +17,11 @@ class Store:
         for order in orders:
             self._inventory_manager.process_order(order)
 
+    def get_inventory(self):
+        return self._inventory_manager.inventory
+    # def check_inventory(self):
+    #     self._inventory_manager.check_inventory()
+
 
 class OrderProcessor:
     # def __init__(self):

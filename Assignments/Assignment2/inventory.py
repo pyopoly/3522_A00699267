@@ -1,4 +1,3 @@
-from enum import Enum, auto
 from factory import Factory
 
 
@@ -39,12 +38,11 @@ class Inventory:
         else:
             return None
 
-
     def __len__(self):
         return len(self._products)
 
     def __iter__(self):
-        return iter(self._products)
+        return iter(self._products.items())
 
 
 class InventoryManager:
@@ -70,6 +68,8 @@ class InventoryManager:
             # print("itemL ", item)
             # purchase stock
 
+    # def check_inventory(self):
+    #     for product, stock in self._inventory:
 
 
     def purchase_item(self, item, amount):
@@ -94,6 +94,11 @@ class InventoryManager:
 
     def replenish_stock(self, item, amount):
         self._inventory.change_stock(item, amount)
+
+    def get_inventory(self):
+        return self._inventory
+
+    inventory = property(get_inventory)
     # def increase_stock(self, product, amount):
 
     # def add_product_to_inventory(self, product):

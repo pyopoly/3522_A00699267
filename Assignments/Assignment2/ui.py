@@ -1,20 +1,33 @@
 class UI:
 
-    @staticmethod
-    def menu(store):
-        print("1. Process Web Orders\n"
-              "2. Check Inventory\n"
-              "3. Exit")
-        prompt = "Enter your choice: "
-        choice = UI.get_valid_input(prompt, 3)
+    def __init__(self, store):
+        self._store = store
 
-        switch = {
-            1: store.process_orders,
-            2: "choice2",
-            3: "choice3"
-        }
+    def menu(self):
+        while True:
+            print("1. Process Web Orders\n"
+                  "2. Check Inventory\n"
+                  "3. Exit")
+            prompt = "Enter your choice: "
+            choice = UI.get_valid_input(prompt, 3)
 
-        switch.get(choice)()
+            switch = {
+                1: self.process_orders,
+                2: self.print_inventory,
+                3: exit
+            }
+
+            switch.get(choice)(self._store)
+            input("Press Enter to continue ")
+
+    def process_orders(self, store):
+        store.process_orders()
+
+    def print_inventory(self, store):
+        inventory = store.get_inventory()
+
+        for i, (product, stock) in enumerate(inventory, start=1):
+            print("{:3}  {:50} stock: {}".format(i, str(product), stock))
 
     @staticmethod
     def get_valid_input(prompt, num_of_choices):
@@ -44,4 +57,3 @@ class UI:
                 print("\n----Please do not leave this empty----")
             else:
                 return string_input
-
