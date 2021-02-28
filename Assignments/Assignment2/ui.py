@@ -24,10 +24,14 @@ class UI:
         store.process_orders()
 
     def print_inventory(self, store):
-        inventory = store.get_inventory()
-
+        inventory = store.inventory
+        manager = store.inventory_manager
         for i, (product, stock) in enumerate(inventory, start=1):
-            print("{:3}  {:50} stock: {}".format(i, str(product), stock))
+            stock_status_msg = manager.stock_status(product)
+            print("{:3}  {:50} stock: {:3}  {}".format(i, str(product), stock, stock_status_msg))
+
+    def exit_and_print_report(self, store):
+        pass
 
     @staticmethod
     def get_valid_input(prompt, num_of_choices):

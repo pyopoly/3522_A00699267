@@ -7,41 +7,25 @@ class ProductType(Enum):
     Candy = auto()
 
 
-class ProductName(Enum):
-    Santa_Workshop = auto()
-    RC_Spider = auto()
-    Robot_Bunny = auto()
-
-
 class Product:
     def __init__(self, product_id, name, description, **kwargs):
         self._product_id = product_id
         self._name = name
         self._description = description
 
-    # class Product:
-    #     def __init__(self, **kwargs):
-    #         self._product_id = kwargs['product_id']
-    #         self._name = kwargs['name']
-    #         self._description = kwargs['description']
-
-    # def get_stock(self):
-    #     return self._stock
-    #
-    # def set_stock(self, amount):
-    #     self._stock = amount
-
     def get_id(self):
         return self._product_id
 
-    # def __key(self):
-    #     return self._product_id
+    def __key(self):
+        return tuple(self._product_id)
 
-    # def __eq__(self, other):
-    #     if isinstance(other, Product):
-    #         return self._product_id == other.id
+    def __hash__(self):
+        return hash(self.__key())
 
-    # stock = property(get_stock, set_stock)
+    def __eq__(self, other):
+        if isinstance(other, Product):
+            return self.__key() == other.__key()
+        return NotImplemented
 
     def __str__(self):
         return f"{self._name}"
@@ -58,7 +42,6 @@ class Toy(Product):
 
 
 class SantasWorkshop(Toy):
-    # def __init__(self, product_id, name, description, min_age, num_rooms, dimensions, has_batteries=False):
     def __init__(self, num_rooms, dimensions, has_batteries=False, **kwargs):
         super().__init__(kwargs['product_id'], kwargs["name"], kwargs['description'], kwargs['min_age'], has_batteries)
         dimensions = [int(x) for x in dimensions.split(",")]
@@ -139,7 +122,6 @@ class EasterBunny(StuffedAnimal):
         Blue = auto()
 
     def __init__(self, **kwargs):
-        # print("xxxxx super", super())
         super().__init__(**kwargs)
 
         # self._stuffing = super().Stuffing.Polyester_Fiberfill
@@ -172,6 +154,7 @@ class CandyCane(Candy):
     class Stripes(Enum):
         Red = auto()
         Green = auto()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # contains_nuts = False
@@ -182,7 +165,6 @@ class CandyCane(Candy):
 class CremeEgg(Candy):
     # contains_nuts = True
     # lactose_free = False
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._pack_size = kwargs['pack_size']

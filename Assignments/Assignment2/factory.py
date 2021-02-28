@@ -2,10 +2,6 @@ import abc
 from products import *
 
 
-
-
-
-
 class AbstractFactory(abc.ABC):
     @abc.abstractmethod
     def create_item(self, order):
@@ -28,8 +24,8 @@ class ChristmasFactory(Factory):
             ProductType.Candy: CandyCane
         }
         item_type = ProductType[order.item_type]
-        print(switch[item_type])
         return switch[item_type](product_id=order.product_id, name=order.name, **order.item_details)
+
 
 class HalloweenFactory(Factory):
     def create_item(self, order):
@@ -39,8 +35,8 @@ class HalloweenFactory(Factory):
             ProductType.Candy: PumpkinCaramelToffee
         }
         item_type = ProductType[order.item_type]
-        print(switch[item_type])
         return switch[item_type](product_id=order.product_id, name=order.name, **order.item_details)
+
 
 class EasterFactory(Factory):
     def create_item(self, order):
@@ -51,16 +47,3 @@ class EasterFactory(Factory):
         }
         item = switch[ProductType[order.item_type]]
         return item(product_id=order.product_id, name=order.name, **order.item_details)
-
-# class ToyFactory(Factory):
-#     pass
-#
-#
-# class StuffedAnimalFactory(Factory):
-#     pass
-#
-#
-# class CandyFactory(Factory):
-#     pass
-
-
