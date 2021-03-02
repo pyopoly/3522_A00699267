@@ -11,7 +11,7 @@ class Auctioneer:
     """
 
     def __init__(self):
-        self.bidders = []
+        self._bidders = []
         self._highest_bid = 0
         self._highest_bidder = None
 
@@ -20,21 +20,24 @@ class Auctioneer:
         Adds a bidder to the list of tracked bidders.
         :param bidder: object with __call__(auctioneer) interface.
         """
-        pass
+        self._bidders.append(bidder)
 
     def reset_auctioneer(self):
         """
         Resets the auctioneer. Removes all the bidders and resets the
         highest bid to 0.
         """
-        pass
+        self._highest_bid = 0
+        self._highest_bidder = None
+        self._bidders.clear()
 
     def _notify_bidders(self):
         """
         Executes all the bidder callbacks. Should only be called if the
         highest bid has changed.
         """
-        pass
+        for bidder in self._bidders:
+            bidder(self)
 
     def accept_bid(self, bid, bidder="Starting Bid"):
         """
@@ -45,7 +48,33 @@ class Auctioneer:
         :param bidder: The object with __call__(auctioneer) that placed
         the bid.
         """
-        pass
+        self._highest_bid = bid
+        self._highest_bidder = bidder
+        self._notify_bidders()
+
+    def get_bidders(self):
+        """
+        Getter for Bidders in this auction.
+        :return list of Bidders
+        """
+        return self._bidders
+
+    def get_highest_bid(self):
+        """
+        Returns the the highest bid currently in the auction.
+        :return: a double, the current highest bid in the auction
+        """
+        return self._highest_bid
+
+    def get_highest_bidder(self):
+        """
+        Returns the current highest Bidder in the auction
+        :return: a Bidder
+        """
+        return self._highest_bidder
+
+    highest_bid = property(get_highest_bid)
+    highest_bidder = property(get_highest_bidder)
 
 
 class Bidder:
@@ -66,18 +95,46 @@ class Bidder:
     • highest_bid
         The highest bid amount that was bid by this bidder.
     """
-    def __init__(self, name, money=100, threat_chance=0.35, bid_increase=1.1):
-        self.name = name
-        self.threat_chance = threat_chance
-        self.money = money
-        self.bid_increase = bid_increase
-        self.highest_bid = 0
+    def __init__(self, name, money=100, bid_probability=0.35, bid_increase=1.1):
+        self._name = name
+        # self._threat_chance = threat_chance
+        self._budget = money
+        self._bid_increase_perc = bid_increase
+        self._bid_probability = bid_probability
+        self._highest_bid = 0
 
     def __call__(self, auctioneer):
-        pass
+        """
+        Places a new bid with auctioneer (cause a new bid, causing auctioneer to notify all observers again).
+        Note:
+            • The bid is against another bidder and not against themselves
+            • The amount that they bid (dictated by bid_increase_perc is not greater than their budget
+            • After accounting for their bid_probability . (Hint: use the random.random() method to generate a random float between 0 and 1 (exclusive) )
+        :param auctioneer:
+        :return: None
+        """
+        if auctioneer.highest_bidder is not self:
+            bid_probability = random.random()
+            next_bid = round(auctioneer.highest_bid * self._bid_increase_perc, 2)
+            if bid_probability < self._bid_probability and next_bid < self._budget:
+                print(f"{self} bidded {next_bid} in response to {auctioneer.highest_bidder}'s bid of {auctioneer.highest_bid}")
+                self._highest_bid = next_bid
+                auctioneer.accept_bid(next_bid, self)
+
+    def get_name(self):
+        """ Getter to get this Bidder's name as a string. """
+        return self._name
+
+    def get_highest_bid(self):
+        """ Getter to get this Bidder's highest bid as a double. """
+        return self._highest_bid
 
     def __str__(self):
-        return self.name
+        """ Formatted toString. """
+        return self._name
+
+    name = property(get_name)
+    highest_bid = property(get_highest_bid)
 
 
 class Auction:
@@ -92,7 +149,10 @@ class Auction:
         attending the auction and can bid.
         :param bidders: sequence type of objects of type Bidder
         """
-        pass
+        self._item = None
+        self._auctioneer = Auctioneer()
+        for bidder in bidders:
+            self._auctioneer.register_bidder(bidder)
 
     def simulate_auction(self, item, start_price):
         """
@@ -101,7 +161,21 @@ class Auction:
         :param item: string, name of item.
         :param start_price: float
         """
-        pass
+        self._item = item
+        print(f"Auctioning {item} starting at {start_price}")
+        self._auctioneer.accept_bid(start_price)
+        print(f"\nThe winner of the auction is: {self._auctioneer.highest_bidder} at {self._auctioneer.highest_bid}\n")
+        self.print_bid_summary()
+
+    def print_bid_summary(self):
+        """
+        Prints conclusion information of this auction, which is the names
+        of all bidders and the highest bids they made.
+        """
+        print("Highest Bids Per Bidder")
+        info = ((bidder, bidder.highest_bid) for bidder in self._auctioneer._bidders)
+        for bidder, highest_bid in info:
+            print("Bidder: {:10} Highest Bid: {}".format(str(bidder), highest_bid))
 
 
 def main():
