@@ -1,6 +1,10 @@
 """
 Implements the observer pattern and simulates a simple auction.
 """
+
+__author__ = "Jack Shih"
+__version__ = "Mar 2021"
+
 import random
 
 
@@ -36,8 +40,11 @@ class Auctioneer:
         Executes all the bidder callbacks. Should only be called if the
         highest bid has changed.
         """
+
         for bidder in self._bidders:
-            bidder(self)
+            next_bid = bidder(self)
+            if next_bid:
+                self.accept_bid(next_bid, bidder)
 
     def accept_bid(self, bid, bidder="Starting Bid"):
         """
@@ -48,6 +55,8 @@ class Auctioneer:
         :param bidder: The object with __call__(auctioneer) that placed
         the bid.
         """
+        if bidder != "Starting Bid":
+            print(f"{bidder} bidded {bid} in response to {self._highest_bidder}'s bid of {self._highest_bid}")
         self._highest_bid = bid
         self._highest_bidder = bidder
         self._notify_bidders()
@@ -95,12 +104,12 @@ class Bidder:
     • highest_bid
         The highest bid amount that was bid by this bidder.
     """
-    def __init__(self, name, money=100, bid_probability=0.35, bid_increase=1.1):
+
+    def __init__(self, name, budget=100.00, bid_probability=0.35, bid_increase_perc=1.1):
         self._name = name
-        # self._threat_chance = threat_chance
-        self._budget = money
-        self._bid_increase_perc = bid_increase
         self._bid_probability = bid_probability
+        self._budget = budget
+        self._bid_increase_perc = bid_increase_perc
         self._highest_bid = 0
 
     def __call__(self, auctioneer):
@@ -117,9 +126,8 @@ class Bidder:
             bid_probability = random.random()
             next_bid = round(auctioneer.highest_bid * self._bid_increase_perc, 2)
             if bid_probability < self._bid_probability and next_bid < self._budget:
-                print(f"{self} bidded {next_bid} in response to {auctioneer.highest_bidder}'s bid of {auctioneer.highest_bid}")
                 self._highest_bid = next_bid
-                auctioneer.accept_bid(next_bid, self)
+                return next_bid
 
     def get_name(self):
         """ Getter to get this Bidder's name as a string. """
@@ -178,22 +186,124 @@ class Auction:
             print("Bidder: {:10} Highest Bid: {}".format(str(bidder), highest_bid))
 
 
-def main():
+def dummy_bidders():
+    """
+    Returns a list of hard-coded bidders
+    :return: list of Bidders
+    """
+    return [Bidder("Jojo", 3000, random.random(), 1.2),
+            Bidder("Melissa", 7000, random.random(), 1.5),
+            Bidder("Priya", 15000, random.random(), 1.1),
+            Bidder("Kewei", 800, random.random(), 1.9),
+            Bidder("Scott", 4000, random.random(), 2)]
+
+
+def add_bidders():
+    """
+    Add custom Bidders by asking user to enter name, budget, and increase percentage. The percentage if the Bidder
+    will make the next bid is randomly generated.
+    :return: Bidder
+    """
     bidders = []
+    while True:
+        name = get_valid_string_input("Enter bidder name: ")
+        budget = get_valid_float_input("Enter bidder budget: ")
+        while True:
+            increase_perc = get_valid_float_input("Enter how much this bidder increase their bid each time "
+                                                  "(example: 1.5 for 50% increase): ")
+            if increase_perc > 1:
+                break
+            else:
+                print("Increase percentage must be higher than 1.")
+        bidders.append(Bidder(name, budget, random.random(), increase_perc))
+        repeat = input("Add more? (Y/N) ")
+        if repeat.upper() != "Y":
+            break
+    return bidders
 
-    # Hardcoding the bidders.
-    bidders.append(Bidder("Jojo", 3000, random.random(), 1.2))
-    bidders.append(Bidder("Melissa", 7000, random.random(), 1.5))
-    bidders.append(Bidder("Priya", 15000, random.random(), 1.1))
-    bidders.append(Bidder("Kewei", 800, random.random(), 1.9))
-    bidders.append(Bidder("Scott", 4000, random.random(), 2))
 
-    print("\n\nStarting Auction!!")
+def get_valid_input(prompt, num_of_choices):
+    """
+    Get input from User. Also valid the input and re-prompt the user if input is invalid.
+    Number of choices is the desired number of choices required of the user. Anything that is
+    not an int in the range of 1 to num_of_choices inclusive will be invalid.
+    :param prompt: a string msg. To show the user to prompt for their input
+    :param num_of_choices: int. Total number of choices expected from this prompt.
+    :return: int, the user's choice
+    """
+    str_input = input(prompt)
+    warning = f"Please enter a number (1-{num_of_choices}): "
+    while True:
+        if str_input.isnumeric():
+            choice = int(str_input)
+            if choice in range(1, num_of_choices + 1):
+                break
+        str_input = input(warning)
+    return choice
+
+
+def get_valid_float_input(prompt):
+    """
+    Returns a non-zero positive float. Prompts the user to keep enter a float until a non-zero number is entered.
+    :param prompt: string
+    :return: a float
+    """
+    while True:
+        try:
+            number = float(input(prompt))
+            if number <= 0:
+                raise ValueError
+        except ValueError:
+            print("Enter a valid positive non-zero input")
+        else:
+            break
+    return number
+
+
+def get_valid_string_input(prompt):
+    """
+    Gets string input from user, making sure input is not empty
+    :param prompt: string prompt to show user
+    :return: string that user entered
+    """
+    while True:
+        string_input = input(prompt)
+        if string_input.strip() == '':
+            print("----Please do not leave this empty----")
+        else:
+            return string_input
+
+
+def start_auction():
+    """
+    Start the auction by presenting a menu for the user to ask for name of the bid item, price of bid item, and
+    if they want to add custom Bidders. Price of item cannot be equal to 0 or less.
+    :return: None
+    """
+    item = get_valid_string_input("Enter bid item: ")
+    price = get_valid_float_input("Enter starting price: ")
     print("------------------")
-    my_auction = Auction(bidders)
-    my_auction.simulate_auction("Antique Vase", 100)
+    print("Do you want to use hardcoded bidders or new custom bidders?\n"
+          "1. Hardcoded bidders\n"
+          "2. Custom bidders")
+    choice = get_valid_input("Enter your choice: ", 2)
+    switch = {
+        1: dummy_bidders,
+        2: add_bidders
+    }
+    bidders = switch.get(choice)()
+    auction = Auction(bidders)
+    print("\n\nStarting Auction!!\n"
+          "------------------")
+    input("Press Enter to begin")
+    auction.simulate_auction(item, price)
+
+
+def main():
+    print("Welcome to the Auction!!")
+    print("------------------")
+    start_auction()
 
 
 if __name__ == '__main__':
     main()
-
