@@ -58,3 +58,13 @@ file_handler.py: \
 contains methods related to reading and writing to a file. Json and Txt files are supported.
 
 -------------------------------------------------
+Lab6:\
+Objective: To get familiar with the observer pattern. Use dictionary comprehension. Experiment with callable objects. \
+Summary: Simulate an auction involving an auctioneer and bidders using the observer pattern.
+
+auction_simulation.py: \
+Auction: controller that starts the simulation.\
+Auctioneer: manages the Bidders. The core in the observer pattern.\
+Bidder: A callable object. The observer of the overser pattern.\
+
+-------------------------------------------------
