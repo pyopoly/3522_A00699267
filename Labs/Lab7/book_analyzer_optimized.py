@@ -69,57 +69,43 @@ class BookAnalyzer:
         """
         # read lines
         with open(src, mode='r', encoding='utf-8') as book_file:
-            self.text = book_file.readlines()
+            text = book_file.readlines()
+        # strip out empty lines and lower all letters
+        stripped_text = (line.lower().split() for line in text if line != "\n")
+        # extract words from lists as a result of split()
+        words = (word for temp_list in stripped_text for word in temp_list)
 
-        # strip out empty lines
-        stripped_text = []
-        for line in self.text:
-            if line != "\n":
-                stripped_text.append(line)
-        self.text = stripped_text
-
-        # convert list of lines to list of words
-        words = []
-        for line in self.text:
-            words += line.split()
-        self.text = words
-
-        # remove common punctuation from words
-        temp_text = []
-        for word in self.text:
-            temp_word = word
+        temp_text = {}
+        for word in words:
             for punctuation in self.COMMON_PUNCTUATION:
-                temp_word = temp_word.replace(punctuation, '').lower()
-            temp_text.append(temp_word)
+                if punctuation in word:
+                    word = word.replace(punctuation, '')
+            temp_text[word] = None
 
         self.text = temp_text
 
-    @staticmethod
-    def is_unique(word, word_list):
-        """
-        Checks to see if the given word appears in the provided sequence.
-        This check is case in-sensitive.
-        :param word: a string
-        :param word_list: a sequence of words
-        :return: True if not found, false otherwise
-        """
-        for a_word in word_list:
-            if word == a_word:
-                return False
-        return True
+    # @staticmethod
+    # def is_unique(word, word_list):
+    #     """
+    #     Checks to see if the given word appears in the provided sequence.
+    #     This check is case in-sensitive.
+    #     :param word: a string
+    #     :param word_list: a sequence of words
+    #     :return: True if not found, false otherwise
+    #     """
+    #     for a_word in word_list:
+    #         if word == a_word:
+    #             return False
+    #     return True
 
+    # @profile
     def find_unique_words(self):
         """
         Filters out all the words that only appear once in the text.
         :return: a list of all the unique words.
         """
         temp_text = self.text
-        unique_words = []
-        while temp_text:
-            word = temp_text.pop()
-            if self.is_unique(word, temp_text):
-                unique_words.append(word)
-        return unique_words
+        return list(unique_word for unique_word in temp_text.keys())
 
 
 @profile
