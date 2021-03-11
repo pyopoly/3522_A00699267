@@ -65,7 +65,7 @@ Summary: Simulate an auction involving an auctioneer and bidders using the obser
 auction_simulation.py: \
 Auction: controller that starts the simulation.\
 Auctioneer: manages the Bidders. The core in the observer pattern.\
-Bidder: A callable object. The observer of the overser pattern.\
+Bidder: A callable object. The observer of the observer pattern.\
 
 -------------------------------------------------
 Lab7:\
