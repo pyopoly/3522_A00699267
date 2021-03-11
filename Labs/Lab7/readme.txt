@@ -22,7 +22,6 @@ method was only ever called for each word once.
 ---------------------------
 book_analyzer_optimized.py:
 ---------------------------
-
 Changes made:
 Used generator expressions in read_data(self, src="House of Usher.txt").
 Used dictionary instead to store the words as keys in the dictionary, since keys must be unique,
