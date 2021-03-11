@@ -78,8 +78,8 @@ Two methods took the longest time. The method is_unique(). which was called 1000
 And inside is_unique(), the word's str method .lower() is called 43525678 times. Took 17.73 seconds on my machine.
 
 Changes made:
-1. if word == a_word: on line 107: removed the .lower() for both strings.
-2. temp_word = temp_word.replace(punctuation, '').lower() on line 92: added .lower() to the end.
+1. if word == a_word: on line 110: removed the .lower() for both strings.
+2. temp_word = temp_word.replace(punctuation, '').lower() on line 95: added .lower() to the end.
 Originally, words are popped off a list and compared with the remaining words in the list.
 Each time a word is compared, every single word in the list is converted to lower case.
 I changed the code so that the words were converted to lower case when the list was first made, so that the .lower()
