@@ -2,17 +2,14 @@ from pokeretriever import Request
 from pokeretriever import PokedexHelper
 
 
-class Pokedex:
-    mode = {"pokemon": 1,
-            "ability": 2,
-            "move": 3}
+# class Pokedex:
 
 
 def main():
     request = Request()
     request.get_args()
-    PokedexHelper.execute_request(request)
-
+    pokedex_object = PokedexHelper.execute_request(request)
+    print(pokedex_object)
 
 if __name__ == "__main__":
     main()
