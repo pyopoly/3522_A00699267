@@ -1,4 +1,5 @@
 from pokeretriever import Request
+from pokeretriever import PokedexHelper
 
 
 class Pokedex:
@@ -10,6 +11,7 @@ class Pokedex:
 def main():
     request = Request()
     request.get_args()
+    PokedexHelper.execute_request(request)
 
 
 if __name__ == "__main__":
