@@ -11,5 +11,6 @@ def main():
     pokedex_object = PokedexHelper.execute_request(request)
     print(pokedex_object)
 
+
 if __name__ == "__main__":
     main()

@@ -47,6 +47,9 @@ class Request:
     def input_data(self):
         return self._input_data
 
+    @property
+    def expanded(self):
+        return self._expanded
 
     def __str__(self):
         return f"{self._mode}, data: {self._input_data}, input file: {self._input_filename}, " \

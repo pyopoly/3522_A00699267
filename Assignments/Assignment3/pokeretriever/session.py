@@ -8,7 +8,6 @@ class Session:
     async def _start_session(query_type, name_or_id):
         async with aiohttp.ClientSession() as session:
             async with session.get(f"https://pokeapi.co/api/v2/{query_type}/{name_or_id}/") as response:
-
                 # print("status", response.status)
                 # print("content-type", response.headers['content-type'])
 
@@ -24,3 +23,11 @@ class Session:
         loop = asyncio.get_event_loop()
         json_data = loop.run_until_complete(Session()._start_session(query_type, name_or_id))
         return json_data
+
+    @staticmethod
+    async def query_url(url):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                json_data = await response.text()
+                json_data = json.loads(json_data)
+                return json_data

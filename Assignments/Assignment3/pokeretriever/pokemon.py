@@ -22,37 +22,53 @@ class PokedexObject:
         self._name = name
         self._id = id
 
-
-    # def get_attributes(self):
-    #     new_list = [attribute.replace('_', ' ') for attribute in dir(self) if attribute[0] == "_" and attribute[1] != '_']
-    #     return new_list
-    #
-    # def get_information
-
     def __str__(self):
-        return f"{self.__class__.__name__}: {self._name}, id: {self._id}"
+        return f"{self.__class__.__name__} {'-'*20} \nname: {self._name} \nid: {self._id}"
 
 
 class PokedexHelper:
-
     @staticmethod
     def execute_request(request: Request) -> PokedexObject:
-        # print(request)
+        print(request)
         mode = request.mode
         input_data = request.input_data
-        return PokedexObjectManager.create_pokedex_object(mode, input_data)
+        expanded = request.expanded
+        return PokedexObjectManager.create_pokedex_object(mode, input_data, expanded)
 
 
 class Pokemon(PokedexObject):
-    def __init__(self, name, id):
+    def __init__(self, name, id, height, weight, stats, types, abilities, moves):
         super().__init__(name, id)
+        self._height = height
+        self._weight = weight
+        self._stats = stats
+        self._types = types
+        self._abilities = abilities
+        self._moves = moves
+
+    def print_move_list(self):
+        result = ''.join(f'{"":10}{pair[0]:15} level learnt: {pair[1]}\n' for pair in self._moves)
+        return result
+
+    def __str__(self):
+        return super().__str__() + f"\n{'height:':10} {self._height} decimetres " \
+                                   f"\n{'weight:':10} {self._weight} hectograms" \
+                                   f"\n{'stats:':10} {self._stats} \n{'types:':10} {self._types}" \
+                                   f"\n{'abilities:':10} {self._abilities} \nmoves: \n{self.print_move_list()}"
 
 
 class PokemonStat(PokedexObject):
-    def __init__(self, name, value, id=None, battle_only=None):
+    def __init__(self, name, value, url, id=None, battle_only=None):
         super().__init__(name, id)
+        self._url = url
         self._value = value
         self._battle_only = battle_only
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return f"{self._name}: {self._value}"
 
 
 class PokemonMove(PokedexObject):
@@ -82,67 +98,72 @@ class PokemonAbility(PokedexObject):
         self._pokemon_list = pokemon_list
 
     def __str__(self):
-        return super().__str__() + f"\ngen: {self._generation:10} \neffect: {self._effect[:60]:10}... " \
-                                   f"\nshort: {self._short_effect:10} \npokemon: {self._pokemon_list:10}"
+        return super().__str__() + f"\ngen: {self._generation:10} \neffect: {self._effect:10}... " \
+                                   f"\nshort: {self._short_effect:10} \npokemon: {self._pokemon_list}"
 
 
 class Factory(abc.ABC):
     @staticmethod
     @abc.abstractmethod
-    def create_pokemon(name_or_id):
+    def create_pokemon(name_or_id, expanded):
         pass
 
     @staticmethod
     @abc.abstractmethod
-    def create_pokemon_stat(name_or_id):
+    def create_pokemon_stat(name_or_id, expanded):
         pass
 
     @staticmethod
     @abc.abstractmethod
-    def create_pokemon_ability(name_or_id):
+    def create_pokemon_ability(name_or_id, expanded):
         pass
 
     @staticmethod
     @abc.abstractmethod
-    def create_pokemon_move(name_or_id):
+    def create_pokemon_move(name_or_id, expanded):
         pass
 
 
 class PokemonFactory(Factory):
     @staticmethod
-    def create_pokemon(name_or_id):
-        query_type = "move"
+    def create_pokemon(name_or_id, expanded=False):
+        query_type = "pokemon"
         json_data = Session.query_info(query_type, name_or_id)
         name = json_data['name']
         id = json_data['id']
         height = json_data['height']
         weight = json_data['weight']
 
+        # Stat
         stats = json_data['stats']
-        stats = {stat_dict['stat']['name']: stat_dict['base_stat'] for stat_dict in stats}
-        stats = [PokemonStat(name, value) for name, value in stats.items()]
+        stats = ((stat_dict['stat']['name'], stat_dict['base_stat'], stat_dict['stat']['url']) for stat_dict in stats)
+        stats = [PokemonStat(name, value, url) for name, value, url in stats]
+
+
         types = json_data['types']
         types = [type_dict['type']['name'] for type_dict in types]
+
+        # ability
         abilities = json_data['abilities']
+        abilities = [ability_dict['ability']['name'] for ability_dict in abilities]
+
+        # moves
         moves = json_data['moves']
-        # PokemonFactory.create_pokemon_stat()
-
-
-        # generation = json_data['generation']['name']
-        # accuracy = json_data['accuracy']
-        # pp = json_data['pp']
-        # power = json_data['power']
-        # move_type = json_data['type']['name']
-        # damage_class = json_data['damage_class']['name']
-        # short_effect = json_data['effect_entries'][0]['short_effect']
-        # return PokemonMove(name, id, generation, accuracy, pp, power, move_type, damage_class, short_effect)
+        moves = [(move_dict["move"]["name"], move_dict["version_group_details"][0]["level_learned_at"],
+                  move_dict["move"]["url"]) for move_dict in moves]
+        moves = [(name, level) for name, level, url in moves]
+        return Pokemon(name, id, height, weight, stats, types, abilities, moves)
 
     @staticmethod
-    def create_pokemon_stat(name_or_id):
+    def create_pokemon_stat(name_or_id, expanded=False):
         pass
+        # query_type = "stat"
+        # json_data = Session.query_info(query_type, name_or_id)
+        # name = json_data['name']
+        # id = json_data['id']
 
     @staticmethod
-    def create_pokemon_ability(name_or_id):
+    def create_pokemon_ability(name_or_id, expanded=False):
         query_type = "ability"
         json_data = Session.query_info(query_type, name_or_id)
         name = json_data['name']
@@ -178,5 +199,5 @@ class PokedexObjectManager:
     }
 
     @staticmethod
-    def create_pokedex_object(mode, input_data):
-        return PokedexObjectManager.pokemon_request_mapping[mode](input_data)
+    def create_pokedex_object(mode, input_data, expanded=False):
+        return PokedexObjectManager.pokemon_request_mapping[mode](input_data, expanded)
