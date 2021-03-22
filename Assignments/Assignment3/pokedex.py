@@ -1,15 +1,13 @@
 from pokeretriever import Request
 from pokeretriever import PokedexHelper
-
+from pokeretriever import CmdArgs
 
 # class Pokedex:
 
 
 def main():
-    request = Request()
-    request.get_args()
-    pokedex_object = PokedexHelper.execute_request(request)
-    print(pokedex_object)
+    pokedex_helper = PokedexHelper()
+    pokedex_helper.start()
 
 
 if __name__ == "__main__":

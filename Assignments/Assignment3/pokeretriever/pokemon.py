@@ -2,31 +2,55 @@
 Implement a facade class that will provide a simplified interface to the pokeretriever package.
 Your program must control access to the package via the interface defined in this facade class.
 """
-
 if __name__ == '__main__':
-    from cmd_args import Request
+    from cmd_args import Request, CmdArgs
     from session import Session
+    from file_handler import FileHandler
 else:
-    from pokeretriever.cmd_args import Request
+    from pokeretriever.cmd_args import Request, CmdArgs
     from pokeretriever.session import Session
+    from pokeretriever.file_handler import FileHandler
 
 import abc
 
 
-class PokedexObject:
+class PokedexObject(abc.ABC):
     """
     PokedexObject is a base class that defines the name and id parameter.
     The Pokemon , Moves , Stat , and Ability classes should inherit from this class.
     """
+
     def __init__(self, name, id):
         self._name = name
         self._id = id
 
     def __str__(self):
-        return f"{self.__class__.__name__} {'-'*20} \nname: {self._name} \nid: {self._id}"
+        return f"{self.__class__.__name__} \n{'-' * 20} \nname: {self._name.title()} \nid: {self._id}"
 
 
 class PokedexHelper:
+    def __init__(self):
+        self._input_filename = None
+        self._output_filename = None
+
+    @staticmethod
+    def start():
+        pokedex_helper = PokedexHelper()
+        pokedex_helper._get_request()
+
+    def _get_request(self):
+        args = CmdArgs.get_args()
+        if args.inputfile:
+            requested_names_or_ids = FileHandler.read_file(args.inputfile)
+        else:
+            requested_names_or_ids = [args.inputdata]
+        for each_name in requested_names_or_ids:
+            args.inputdata = each_name
+            request = Request.create_request(args)
+            pokedex_object = PokedexHelper.execute_request(request)
+            print(pokedex_object)
+
+
     @staticmethod
     def execute_request(request: Request) -> PokedexObject:
         print(request)
@@ -97,6 +121,9 @@ class PokemonAbility(PokedexObject):
         self._short_effect = short_effect
         self._pokemon_list = pokemon_list
 
+    def __repr__(self):
+        return self._name
+
     def __str__(self):
         return super().__str__() + f"\ngen: {self._generation:10} \neffect: {self._effect:10}... " \
                                    f"\nshort: {self._short_effect:10} \npokemon: {self._pokemon_list}"
@@ -137,8 +164,6 @@ class PokemonFactory(Factory):
         # Stat
         stats = json_data['stats']
         stats = ((stat_dict['stat']['name'], stat_dict['base_stat'], stat_dict['stat']['url']) for stat_dict in stats)
-        stats = [PokemonStat(name, value, url) for name, value, url in stats]
-
 
         types = json_data['types']
         types = [type_dict['type']['name'] for type_dict in types]
@@ -152,6 +177,13 @@ class PokemonFactory(Factory):
         moves = [(move_dict["move"]["name"], move_dict["version_group_details"][0]["level_learned_at"],
                   move_dict["move"]["url"]) for move_dict in moves]
         moves = [(name, level) for name, level, url in moves]
+
+        if expanded:
+            pass
+        else:
+            stats = [PokemonStat(name, value, url) for name, value, url in stats]
+            abilities = [PokemonAbility(name, None, None, None, None, None) for name in abilities]
+
         return Pokemon(name, id, height, weight, stats, types, abilities, moves)
 
     @staticmethod

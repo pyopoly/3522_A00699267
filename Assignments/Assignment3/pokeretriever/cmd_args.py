@@ -22,22 +22,16 @@ class Request:
     Request is a class that contains all the data gathered by the argparse module.
     """
 
-    def __init__(self):
-        self._mode = None
-        self._input_filename = None
-        self._input_data = None
-        self._expanded = False
-        self._output_filename = None
-        # self._output = False
-        # self._input_file = False
+    def __init__(self, mode, input_data=None, expanded=False):
+        self._mode = mode
+        self._input_data = input_data
+        # self._input_filename = input_file
+        self._expanded = expanded
+        # self._output_filename = output_file
 
-    def get_args(self):
-        args = CmdArgs.get_args()
-        self._mode = args.mode
-        self._input_filename = args.inputfile
-        self._input_data = args.inputdata
-        self._expanded = args.expanded
-        self._output_filename = args.output
+    @classmethod
+    def create_request(cls, args):
+        return Request(args.mode, args.inputdata.lower(), args.expanded)
 
     @property
     def mode(self):
@@ -52,5 +46,5 @@ class Request:
         return self._expanded
 
     def __str__(self):
-        return f"{self._mode}, data: {self._input_data}, input file: {self._input_filename}, " \
-               f"expanded: {self._expanded}, output: {self._output_filename}"
+        return f"{self._mode}, data: {self._input_data}, " \
+               f"expanded: {self._expanded}"
