@@ -24,41 +24,6 @@ class LibraryItem(abc.ABC):
         self._title = kwargs["title"]
         self._num_copies = kwargs["num_copies"]
 
-    # def __init__(self, call_num, title, num_copies):
-    #     """
-    #     Initializes a LibraryItem with unique call number, title, and number of copies.
-    #     :param call_num: a string
-    #     :param title: a string
-    #     :param num_copies: an int
-    #     :precondition call_number: a unique identifier
-    #     :precondition num_copies: a positive number
-    #     """
-    #     self._call_num = call_num
-    #     self._title = title
-    #     self._num_copies = num_copies
-
-    # @classmethod
-    # @abc.abstractmethod
-    # def init_library_item(cls, call_num, title, num_copies):
-    #     """
-    #     Abstract method for child classes so they can implement additional instance variables
-    #     depending on the type of library item.
-    #     :param call_num: a string
-    #     :param title: a string
-    #     :param num_copies: an int
-    #     :precondition call_number: a unique identifier
-    #     :precondition num_copies: a positive number
-    #     """
-        pass
-
-    @property
-    def title(self):
-        """
-        Returns the title of the item
-        :return: a string
-        """
-        return self._title.title()
-
     def increment_number_of_copies(self):
         """
         Set's the number of copies of an item
@@ -70,15 +35,6 @@ class LibraryItem(abc.ABC):
         Set's the number of copies of an item
         """
         self._num_copies -= 1
-
-    @property
-    def num_copies(self):
-        """
-        Returns the number of copies that are available for this
-        specific item.
-        :return: an int
-        """
-        return self._num_copies
 
     def check_availability(self):
         """
@@ -104,6 +60,23 @@ class LibraryItem(abc.ABC):
         """
         return self._call_num
 
+    @property
+    def title(self):
+        """
+        Returns the title of the item
+        :return: a string
+        """
+        return self._title.title()
+
+    @property
+    def num_copies(self):
+        """
+        Returns the number of copies that are available for this
+        specific item.
+        :return: an int
+        """
+        return self._num_copies
+
     def __str__(self):
         return f"---- {self.__class__.__name__}: {self.title} ----\n" \
                f"Call Number: {self.call_number}\n" \
@@ -128,21 +101,6 @@ class Book(LibraryItem):
         """
         super().__init__(call_num=call_num, title=title, num_copies=num_copies)
         self._author = author
-
-    # @classmethod
-    # def init_library_item(cls, call_num, title, num_copies):
-    #     """
-    #     Initializes a Book by prompting the user to add the author of the Book.
-    #     Author is a string
-    #     :param call_num: a string
-    #     :param title: a string
-    #     :param num_copies: an int
-    #     :precondition call_num: a unique identifier
-    #     :precondition num_copies: a positive integer
-    #     :return: a Book
-    #     """
-    #     author = input("author: ")
-    #     return cls(call_num, title, num_copies, author)
 
     def __str__(self):
         """
@@ -174,22 +132,6 @@ class DVD(LibraryItem):
         self._release_date = release_date
         self._region_code = region_code
 
-    # @classmethod
-    # def init_library_item(cls, call_num, title, num_copies):
-    #     """
-    #     Initializes a DVD by prompting the user to add the release date and region code
-    #     of the DVD. Release date is a string. Region code is an int from 0 to 8.
-    #     :param call_num: a string
-    #     :param title: a string
-    #     :param num_copies: an int
-    #     :precondition call_num: a unique identifier
-    #     :precondition num_copies: a positive integer
-    #     :return: a DVD
-    #     """
-    #     release_date = input("Enter release date: ")
-    #     region_code = input("Enter region code (0 - 8): ")
-    #     return cls(call_num, title, num_copies, release_date, region_code)
-
     def __str__(self):
         """
         ToString.
@@ -220,23 +162,6 @@ class Journal(LibraryItem):
         super().__init__(call_num=call_num, title=title, num_copies=num_copies)
         self._issue_number = issue_number
         self._publisher = publisher
-
-    # @classmethod
-    # def init_library_item(cls, call_num, title, num_copies):
-    #     """
-    #     Initializes a Journal by prompting the user to add the issue number and publisher
-    #     of the Journal. Issue number is an int, and publisher is a string,
-    #     :param call_num: an int
-    #     :param title: a string
-    #     :param num_copies: an int
-    #     :precondition call_num: a unique identifier
-    #     :precondition num_copies: a positive integer
-    #     :precondition issue_number: a positive integer
-    #     :return: an Journal
-    #     """
-    #     issue_number = input("Enter issue number: ")
-    #     publisher = input("Enter publisher: ")
-    #     return cls(call_num, title, num_copies, issue_number, publisher)
 
     def __str__(self):
         """
