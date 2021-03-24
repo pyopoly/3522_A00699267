@@ -83,15 +83,14 @@ class Library:
         input("Press Enter to continue")
 
     def find_item(self):
-
         title = self._ui.get_title()
-        found_titles = self._item_catalogue.find_items(title)
-        print("We found the following: ")
-        if len(found_titles) > 0:
-            for title in found_titles:
-                print(title)
+        titles = self._item_catalogue.find_titles(title)
+        if len(titles) > 0:
+            print("We found the following: ")
+            list(map(print, titles))
         else:
             print("Sorry! We found nothing with that title")
+        self._ui.pause()
 
     def add_item(self):
         self._item_catalogue.add_item()

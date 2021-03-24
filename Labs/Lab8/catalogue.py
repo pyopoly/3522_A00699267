@@ -18,15 +18,13 @@ class Catalogue:
         """
         self._library_item_list = library_item_list
 
-    def find_items(self, title):
+    def find_titles(self, title):
         """
         Find items with the same and similar title.
         :param title: a string
-        :return: a list of titles.
+        :return: [strings]: a list of titles.
         """
-        title_list = []
-        for library_item in self._library_item_list:
-            title_list.append(library_item.title)
+        title_list = (library_item.title for library_item in self._library_item_list)
         results = difflib.get_close_matches(title, title_list,
                                             cutoff=0.5)
         return results
