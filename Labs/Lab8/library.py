@@ -22,6 +22,7 @@ class Library:
         """
         Initialize the library with a catalogue of items.
         """
+        self._ui = ConsoleUI()
         self._item_catalogue = catalogue_of_items
 
     def check_out_item(self):
@@ -30,7 +31,7 @@ class Library:
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
-        call_number = ConsoleUI.get_call_num()
+        call_number = self._ui.get_call_num()
         item = self._item_catalogue.retrieve_item_by_call_number(call_number)
         if item.check_availability():
             status = self._item_catalogue.reduce_item_count(call_number)
@@ -50,7 +51,7 @@ class Library:
         :precondition call_number: a unique identifier
         """
 
-        call_number = ConsoleUI.get_call_num()
+        call_number = self._ui.get_call_num()
         status = self._item_catalogue.increment_item_count(call_number)
         if status:
             item = self._item_catalogue.retrieve_item_by_call_number(call_number)
@@ -64,24 +65,8 @@ class Library:
         Display the library menu allowing the user to either access the
         list of items, check out, return, find, add, remove a item.
         """
-        user_input = None
-        while user_input != 7:
-            print("\nWelcome to the Library!")
-            print("-----------------------")
-            print("1. Display all items")
-            print("2. Check Out a item")
-            print("3. Return a item")
-            print("4. Find a item")
-            print("5. Add a item")
-            print("6. Remove a item")
-            print("7. Quit")
-            string_input = input("Please enter your choice (1-7): ")
-
-            # handle user pressing only enter in menu
-            if string_input == '':
-                continue
-
-            user_input = int(string_input)
+        while True:
+            user_input = self._ui.main_menu()
             switch = {
                 1: self.display_all_items,
                 2: self.check_out_item,
@@ -91,10 +76,7 @@ class Library:
                 6: self.remove_item,
                 7: self.quit
             }
-
             switch.get(user_input, "Could not process the input. Please enter a number from 1 - 7.")()
-
-
 
     def display_all_items(self):
         self._item_catalogue.display_available_items()
@@ -102,7 +84,7 @@ class Library:
 
     def find_item(self):
 
-        title = ConsoleUI.get_title()
+        title = self._ui.get_title()
         found_titles = self._item_catalogue.find_items(title)
         print("We found the following: ")
         if len(found_titles) > 0:
@@ -115,11 +97,12 @@ class Library:
         self._item_catalogue.add_item()
 
     def remove_item(self):
-        call_number = ConsoleUI.get_call_num()
+        call_number = self._ui.get_call_num()
         self._item_catalogue.remove_item(call_number)
 
     def quit(self):
-        print("Thank you for visiting the Library.")
+        self._ui.good_bye_phrase()
+        exit()
 
 
 def main():
