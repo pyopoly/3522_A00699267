@@ -73,7 +73,10 @@ class Catalogue:
         :return: item object if found, None otherwise
         """
         found_item = filter(lambda item: item.call_number == call_number, self._library_item_list)
-        return next(found_item)
+        try:
+            return next(found_item)
+        except StopIteration:
+            return None
 
     def reduce_item_count(self, call_number):
         """
