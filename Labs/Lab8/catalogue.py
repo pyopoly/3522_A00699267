@@ -37,7 +37,7 @@ class Catalogue:
         """
         # First check if call number already exists.
         call_number = input("Enter Call Number: ")
-        found_item = self.retrieve_item_by_call_number(call_number)
+        found_item = self._retrieve_item_by_call_number(call_number)
         if found_item:
             print(f"Could not add item with call number "
                   f"{found_item.call_number}. It already exists. ")
@@ -57,7 +57,7 @@ class Catalogue:
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
-        found_item = self.retrieve_item_by_call_number(call_number)
+        found_item = self._retrieve_item_by_call_number(call_number)
         if found_item:
             self._library_item_list.remove(found_item)
             print(f"Successfully removed {found_item.title} with "
@@ -65,19 +65,15 @@ class Catalogue:
         else:
             print(f"item with call number: {call_number} not found.")
 
-    def retrieve_item_by_call_number(self, call_number):
+    def _retrieve_item_by_call_number(self, call_number):
         """
         A private method that encapsulates the retrieval of an item with
         the given call number from the library.
         :param call_number: a string
         :return: item object if found, None otherwise
         """
-        found_item = None
-        for library_item in self._library_item_list:
-            if library_item.call_number == call_number:
-                found_item = library_item
-                break
-        return found_item
+        found_item = filter(lambda item: item.call_number == call_number, self._library_item_list)
+        return next(found_item)
 
     def reduce_item_count(self, call_number):
         """
@@ -88,7 +84,7 @@ class Catalogue:
         :return: True if the item was found and count decremented, false
         otherwise.
         """
-        library_item = self.retrieve_item_by_call_number(call_number)
+        library_item = self._retrieve_item_by_call_number(call_number)
         if library_item:
             library_item.decrement_number_of_copies()
             return True
@@ -104,7 +100,7 @@ class Catalogue:
         :return: True if the item was found and count incremented, false
         otherwise.
         """
-        library_item = self.retrieve_item_by_call_number(call_number)
+        library_item = self._retrieve_item_by_call_number(call_number)
         if library_item:
             library_item.increment_number_of_copies()
             return True
