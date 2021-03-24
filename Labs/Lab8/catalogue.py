@@ -26,7 +26,7 @@ class Catalogue:
         """
         title_list = []
         for library_item in self._library_item_list:
-            title_list.append(library_item.get_title())
+            title_list.append(library_item.title)
         results = difflib.get_close_matches(title, title_list,
                                             cutoff=0.5)
         return results
@@ -62,7 +62,7 @@ class Catalogue:
         found_item = self.retrieve_item_by_call_number(call_number)
         if found_item:
             self._library_item_list.remove(found_item)
-            print(f"Successfully removed {found_item.get_title()} with "
+            print(f"Successfully removed {found_item.title} with "
                   f"call number: {call_number}")
         else:
             print(f"item with call number: {call_number} not found.")

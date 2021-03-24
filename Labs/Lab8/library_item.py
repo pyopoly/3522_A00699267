@@ -68,19 +68,10 @@ class LibraryItem(abc.ABC):
         """
         return self._title.title()
 
-    @property
-    def num_copies(self):
-        """
-        Returns the number of copies that are available for this
-        specific item.
-        :return: an int
-        """
-        return self._num_copies
-
     def __str__(self):
-        return f"---- {self.__class__.__name__}: {self.title} ----\n" \
-               f"Call Number: {self.call_number}\n" \
-               f"Number of Copies: {self.num_copies}\n"
+        return f"---- {self.__class__.__name__}: {self._title} ----\n" \
+               f"Call Number: {self._call_num}\n" \
+               f"Number of Copies: {self._num_copies}\n"
 
 
 class Book(LibraryItem):
