@@ -11,6 +11,7 @@ class LibraryItem(abc.ABC):
     LibraryItem is an interface for all possible library items in the future.
     All library items must have a unique call number, title, and number of copies.
     """
+
     def __init__(self, call_num, title, num_copies):
         """
         Initializes a LibraryItem with unique call number, title, and number of copies.
@@ -38,7 +39,8 @@ class LibraryItem(abc.ABC):
         """
         pass
 
-    def get_title(self):
+    @property
+    def title(self):
         """
         Returns the title of the item
         :return: a string
@@ -57,7 +59,8 @@ class LibraryItem(abc.ABC):
         """
         self._num_copies -= 1
 
-    def get_num_copies(self):
+    @property
+    def num_copies(self):
         """
         Returns the number of copies that are available for this
         specific item.
@@ -89,12 +92,18 @@ class LibraryItem(abc.ABC):
         """
         return self._call_num
 
+    def __str__(self):
+        return f"---- {self.__class__.__name__}: {self.title} ----\n" \
+               f"Call Number: {self.call_number}\n" \
+               f"Number of Copies: {self.num_copies}\n"
+
 
 class Book(LibraryItem):
     """
     Represents a single book in a library which is identified through
     its call number. it also has an author.
     """
+
     def __init__(self, call_num, title, num_copies, author):
         """
         Initializes a Book.
@@ -120,7 +129,7 @@ class Book(LibraryItem):
         :precondition num_copies: a positive integer
         :return: a Book
         """
-        author = input("Enter Author Name: ")
+        author = input("author: ")
         return cls(call_num, title, num_copies, author)
 
     def __str__(self):
@@ -128,10 +137,7 @@ class Book(LibraryItem):
         ToString.
         :return: User-friendly formatted String that depicts the Book's attributes.
         """
-        return f"---- Book: {self.get_title()} ----\n" \
-               f"Call Number: {self.call_number}\n" \
-               f"Number of Copies: {self._num_copies}\n" \
-               f"Author: {self._author}"
+        return super().__str__() + f"Author: {self._author}"
 
 
 class DVD(LibraryItem):
@@ -140,6 +146,7 @@ class DVD(LibraryItem):
     it's call number. DVDs have a release date, and a region code.
     Region code is an int from 0 to 8.
     """
+
     def __init__(self, call_num, title, num_copies, release_date, region_code):
         """
         Initializes a DVD.
@@ -177,11 +184,8 @@ class DVD(LibraryItem):
         ToString.
         :return: User-friendly formatted String that depicts the DVD's attributes.
         """
-        return f"---- DVD: {self.get_title()} ----\n" \
-               f"Call Number: {self.call_number}\n" \
-               f"Number of Copies: {self._num_copies}\n" \
-               f"Released: {self._release_date}\n" \
-               f"Region code: {self._region_code}"
+        return super().__str__() + f"Released: {self._release_date}\n" \
+                                   f"Region code: {self._region_code}"
 
 
 class Journal(LibraryItem):
@@ -189,6 +193,7 @@ class Journal(LibraryItem):
     Represents a single Journal in a library which is identified through
     its call number. Journals have an issue number, and a publisher
     """
+
     def __init__(self, call_num, title, num_copies, issue_number, publisher):
         """
         Initializes a Journal.
@@ -227,8 +232,5 @@ class Journal(LibraryItem):
         ToString.
         :return: User-friendly formatted String that depicts the Journal's attributes.
         """
-        return f"---- DVD: {self.get_title()} ----\n" \
-               f"Call Number: {self.call_number}\n" \
-               f"Number of Copies: {self._num_copies}\n" \
-               f"Issue number: {self._issue_number}\n" \
-               f"Publisher: {self._publisher}"
+        return super().__str__() + f"Issue number: {self._issue_number}\n" \
+                                   f"Publisher: {self._publisher}"
