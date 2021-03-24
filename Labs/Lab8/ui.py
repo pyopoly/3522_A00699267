@@ -21,10 +21,12 @@ class ConsoleUI:
         print("5. Add a item")
         print("6. Remove a item")
         print("7. Quit")
-
         while True:
             string_input = input("Please enter your choice (1-7): ")
             if string_input != '':
                 break
-
         return int(string_input)
+
+    def display_all_items(self, items):
+        print("items List \n--------------", end="\n")
+        list(map(lambda item: print(item, "\n"), items))

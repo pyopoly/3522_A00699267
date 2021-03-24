@@ -79,8 +79,9 @@ class Library:
             switch.get(user_input, "Could not process the input. Please enter a number from 1 - 7.")()
 
     def display_all_items(self):
-        self._item_catalogue.display_available_items()
-        input("Press Enter to continue")
+        items = self._item_catalogue.library_items
+        self._ui.display_all_items(items)
+        self._ui.pause()
 
     def find_item(self):
         title = self._ui.get_title()

@@ -79,16 +79,6 @@ class Catalogue:
                 break
         return found_item
 
-    def display_available_items(self):
-        """
-        Display all the items in the library.
-        """
-        print("items List")
-        print("--------------", end="\n\n")
-        for library_item in self._library_item_list:
-            print(library_item)
-            print()
-
     def reduce_item_count(self, call_number):
         """
         Decrement the item count for an item with the given call number
@@ -129,3 +119,11 @@ class Catalogue:
         """
         dummy_item_list = LibraryItemGenerator.generate_test_items()
         self._library_item_list = dummy_item_list
+
+    def get_library_items(self):
+        """
+        Returns the items in the library.
+        """
+        return self._library_item_list
+
+    library_items = property(get_library_items)
