@@ -50,3 +50,5 @@ class ConsoleUI:
             print(f"Successfully removed {title} with call number: {call_number}")
         else:
             print(f"item with call number: {call_number} not found.")
+
+

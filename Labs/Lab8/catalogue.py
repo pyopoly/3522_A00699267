@@ -29,27 +29,13 @@ class Catalogue:
                                             cutoff=0.5)
         return results
 
-    def add_item(self):
+    def add_item(self, new_item):
         """
         Add a brand new item to the library with a unique call number.
         Redirects user to the LibraryItemGenerator for an UI to add different
         library items. Calls LibraryItemGenerator's class method.
         """
-        # First check if call number already exists.
-        call_number = input("Enter Call Number: ")
-        found_item = self.retrieve_item_by_call_number(call_number)
-        if found_item:
-            print(f"Could not add item with call number "
-                  f"{found_item.call_number}. It already exists. ")
-        else:
-            # Add the item with LibraryItemGenerator
-            new_item = LibraryItemGenerator.add_item(call_number)
-            if new_item:
-                self._library_item_list.append(new_item)
-                print("item added successfully! item details:")
-                print(new_item)
-            else:
-                print("item not added")
+        self._library_item_list.append(new_item)
 
     def remove_item(self, call_number):
         """

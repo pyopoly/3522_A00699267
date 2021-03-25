@@ -9,7 +9,7 @@ __version__ = "Jan 2021"
 
 from catalogue import Catalogue
 from ui import ConsoleUI
-
+from factory import FactoryMapper
 
 class Library:
     """
@@ -86,7 +86,20 @@ class Library:
         self._ui.pause()
 
     def add_item(self):
-        self._item_catalogue.add_item()
+        call_number = self._ui.get_call_num()
+        found_item = self._item_catalogue.retrieve_item_by_call_number(call_number)
+        if found_item:
+            print(f"Could not add item with call number "
+                  f"{found_item.call_number}. It already exists. ")
+        else:
+            new_item = FactoryMapper.create_item(call_number)
+            if new_item:
+                self._item_catalogue.add_item(new_item)
+                print("item added successfully! item details:")
+                print(new_item, "\n")
+            else:
+                print("item not added")
+        self._ui.pause()
 
     def remove_item(self):
         call_number = self._ui.get_call_num()
