@@ -9,7 +9,6 @@ __version__ = "Jan 2021"
 
 from catalogue import Catalogue
 from ui import ConsoleUI
-from library_item import LibraryItem
 
 
 class Library:
@@ -32,17 +31,17 @@ class Library:
         :precondition call_number: a unique identifier
         """
         call_number = self._ui.get_call_num()
-        item = self._item_catalogue._retrieve_item_by_call_number(call_number)
-        if item.check_availability():
-            status = self._item_catalogue.reduce_item_count(call_number)
-            if status:
-                print(f"Checkout complete for {type(item).__name__}: '{item.title}'!")
+        item = self._item_catalogue.retrieve_item_by_call_number(call_number)
+        if item:
+            title = item.title
+            if item.check_availability():
+                result = self._item_catalogue.reduce_item_count(call_number)
             else:
-                print(f"Could not find item with call number {call_number}"
-                      f". Checkout failed.")
+                result = False
         else:
-            print(f"No copies left for call number {call_number}"
-                  f". Checkout failed.")
+            result = None
+            title = None
+        self._ui.print_check_out_result(result, call_number, type(item).__name__, title)
 
     def return_item(self):
         """

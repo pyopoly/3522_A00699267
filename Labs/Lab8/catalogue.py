@@ -37,7 +37,7 @@ class Catalogue:
         """
         # First check if call number already exists.
         call_number = input("Enter Call Number: ")
-        found_item = self._retrieve_item_by_call_number(call_number)
+        found_item = self.retrieve_item_by_call_number(call_number)
         if found_item:
             print(f"Could not add item with call number "
                   f"{found_item.call_number}. It already exists. ")
@@ -58,14 +58,14 @@ class Catalogue:
         :precondition call_number: a unique identifier
         :return boolean, True if item removed
         """
-        found_item = self._retrieve_item_by_call_number(call_number)
+        found_item = self.retrieve_item_by_call_number(call_number)
         try:
             self._library_item_list.remove(found_item)
             return True, found_item.title
         except ValueError:
             return False, None
 
-    def _retrieve_item_by_call_number(self, call_number):
+    def retrieve_item_by_call_number(self, call_number):
         """
         A private method that encapsulates the retrieval of an item with
         the given call number from the library.
@@ -87,16 +87,12 @@ class Catalogue:
         :return: True if the item was found and count decremented, false
         otherwise.
         """
-        library_item = self._retrieve_item_by_call_number(call_number)
+        library_item = self.retrieve_item_by_call_number(call_number)
         if library_item:
             library_item.decrement_number_of_copies()
             return True
         else:
             return False
-
-    def get_item_title(self, call_number):
-        item = self._retrieve_item_by_call_number(call_number)
-        return item.title
 
     def return_item(self, call_number):
         """
@@ -107,7 +103,7 @@ class Catalogue:
         :return: True if the item was found and count incremented, false
         otherwise.
         """
-        item = self._retrieve_item_by_call_number(call_number)
+        item = self.retrieve_item_by_call_number(call_number)
         if item:
             item.increment_number_of_copies()
             return True, type(item).__name__, item.title

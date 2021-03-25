@@ -31,12 +31,19 @@ class ConsoleUI:
         print("items List \n--------------", end="\n")
         list(map(lambda item: print(item, "\n"), items))
 
+    def print_check_out_result(self, result, call_number, item_type, title):
+        if result:
+            print(f"Checkout complete for {item_type}: '{title}'!")
+        elif result is False:
+            print(f"No copies left for call number {call_number}. Checkout failed.")
+        else:
+            print(f"Could not find item with call number {call_number}. Checkout failed.")
+
     def print_return_item_result(self, result, call_number, item_type, title):
         if result:
             print(f"{item_type}: '{title}' returned successfully!")
         else:
-            print(f"Could not find item with call number {call_number}"
-                  f". Return failed.")
+            print(f"Could not find item with call number {call_number}. Return failed.")
 
     def print_remove_item_result(self, result, call_number, title):
         if result:
