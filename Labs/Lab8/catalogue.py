@@ -4,7 +4,7 @@ different types of library items.
 """
 
 __author__ = "Jack Shih"
-__version__ = "Jan 2021"
+__version__ = "Mar 2021"
 
 import difflib
 from library_item_generator import LibraryItemGenerator

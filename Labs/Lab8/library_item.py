@@ -26,13 +26,13 @@ class LibraryItem(abc.ABC):
 
     def increment_number_of_copies(self):
         """
-        Set's the number of copies of an item
+        Sets the number of copies of an item
         """
         self._num_copies += 1
 
     def decrement_number_of_copies(self):
         """
-        Set's the number of copies of an item
+        Sets the number of copies of an item
         """
         self._num_copies -= 1
 

@@ -5,9 +5,8 @@ while the catalogue manages the Library_items.
 """
 
 __author__ = "Jack Shih"
-__version__ = "Jan 2021"
+__version__ = "Mar 2021"
 
-from catalogue import Catalogue
 from ui import ConsoleUI
 from factory import FactoryMapper
 
@@ -70,11 +69,13 @@ class Library:
             switch.get(user_input, "Could not process the input. Please enter a number from 1 - 7.")()
 
     def display_all_items(self):
+        """ Display all LibraryItems in the Catalogue. """
         items = self._item_catalogue.library_items
         self._ui.display_all_items(items)
         self._ui.pause()
 
     def find_item(self):
+        """ Find LibraryItems with similar titles in the Catalogue. """
         title = self._ui.get_title()
         titles = self._item_catalogue.find_titles(title)
         if len(titles) > 0:
@@ -85,6 +86,7 @@ class Library:
         self._ui.pause()
 
     def add_item(self):
+        """ Adds a LibraryItem to the Catalogue. The result is printed by UI. """
         call_number = self._ui.get_call_num()
         found_item = self._item_catalogue.retrieve_item_by_call_number(call_number)
         if found_item:
@@ -100,25 +102,13 @@ class Library:
         self._ui.pause()
 
     def remove_item(self):
+        """ Removes an LibraryItem from the Catalogue using the call number. """
         call_number = self._ui.get_call_num()
         result, title = self._item_catalogue.remove_item(call_number)
         self._ui.print_remove_item_result(result, call_number, title)
 
     def quit(self):
+        """ Quites the program. """
         self._ui.good_bye_phrase()
         exit()
 
-
-def main():
-    """
-    Creates a library with dummy data and prompts the user for input.
-    """
-    item_list = []
-    catalogue = Catalogue(item_list)
-    catalogue.generate_test_items()
-    my_epic_library = Library(catalogue)
-    my_epic_library.display_library_menu()
-
-
-if __name__ == '__main__':
-    main()

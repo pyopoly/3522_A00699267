@@ -1,9 +1,9 @@
 """
-library_item_generator module manages LibraryItem types, such as DVD, Book, or Journal.
+library_item_generator module.
 """
 
 __author__ = "Jack Shih"
-__version__ = "Jan 2021"
+__version__ = "Mar 2021"
 
 import library_item
 
