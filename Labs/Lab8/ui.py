@@ -30,3 +30,9 @@ class ConsoleUI:
     def display_all_items(self, items):
         print("items List \n--------------", end="\n")
         list(map(lambda item: print(item, "\n"), items))
+
+    def print_remove_item_result(self, result, call_number, title):
+        if result:
+            print(f"Successfully removed {title} with call number: {call_number}")
+        else:
+            print(f"item with call number: {call_number} not found.")

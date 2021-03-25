@@ -56,14 +56,14 @@ class Catalogue:
         Remove an existing item from the library
         :param call_number: a string
         :precondition call_number: a unique identifier
+        :return boolean, True if item removed
         """
         found_item = self._retrieve_item_by_call_number(call_number)
-        if found_item:
+        try:
             self._library_item_list.remove(found_item)
-            print(f"Successfully removed {found_item.title} with "
-                  f"call number: {call_number}")
-        else:
-            print(f"item with call number: {call_number} not found.")
+            return True, found_item.title
+        except ValueError:
+            return False, None
 
     def _retrieve_item_by_call_number(self, call_number):
         """
@@ -93,6 +93,10 @@ class Catalogue:
             return True
         else:
             return False
+
+    def get_item_title(self, call_number):
+        item = self._retrieve_item_by_call_number(call_number)
+        return item.title
 
     def increment_item_count(self, call_number):
         """

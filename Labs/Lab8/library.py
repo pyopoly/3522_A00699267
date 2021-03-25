@@ -32,7 +32,7 @@ class Library:
         :precondition call_number: a unique identifier
         """
         call_number = self._ui.get_call_num()
-        item = self._item_catalogue.retrieve_item_by_call_number(call_number)
+        item = self._item_catalogue._retrieve_item_by_call_number(call_number)
         if item.check_availability():
             status = self._item_catalogue.reduce_item_count(call_number)
             if status:
@@ -98,7 +98,8 @@ class Library:
 
     def remove_item(self):
         call_number = self._ui.get_call_num()
-        self._item_catalogue.remove_item(call_number)
+        result, title = self._item_catalogue.remove_item(call_number)
+        self._ui.print_remove_item_result(result, call_number, title)
 
     def quit(self):
         self._ui.good_bye_phrase()
