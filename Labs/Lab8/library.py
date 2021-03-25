@@ -47,18 +47,11 @@ class Library:
     def return_item(self):
         """
         Return an item with the given call number from the library.
-        :param call_number: a string
         :precondition call_number: a unique identifier
         """
-
         call_number = self._ui.get_call_num()
-        status = self._item_catalogue.increment_item_count(call_number)
-        if status:
-            item = self._item_catalogue.retrieve_item_by_call_number(call_number)
-            print(f"{type(item).__name__}: '{item.get_title()}' returned successfully!")
-        else:
-            print(f"Could not find item with call number {call_number}"
-                  f". Return failed.")
+        status, item_type, title = self._item_catalogue.return_item(call_number)
+        self._ui.print_return_item_result(status, call_number, item_type, title)
 
     def display_library_menu(self):
         """
@@ -70,7 +63,7 @@ class Library:
             switch = {
                 1: self.display_all_items,
                 2: self.check_out_item,
-                3: self.remove_item,
+                3: self.return_item,
                 4: self.find_item,
                 5: self.add_item,
                 6: self.remove_item,

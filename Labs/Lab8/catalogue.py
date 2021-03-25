@@ -98,7 +98,7 @@ class Catalogue:
         item = self._retrieve_item_by_call_number(call_number)
         return item.title
 
-    def increment_item_count(self, call_number):
+    def return_item(self, call_number):
         """
         Increment the item count for an item with the given call number
         in the library.
@@ -107,12 +107,12 @@ class Catalogue:
         :return: True if the item was found and count incremented, false
         otherwise.
         """
-        library_item = self._retrieve_item_by_call_number(call_number)
-        if library_item:
-            library_item.increment_number_of_copies()
-            return True
+        item = self._retrieve_item_by_call_number(call_number)
+        if item:
+            item.increment_number_of_copies()
+            return True, type(item).__name__, item.title
         else:
-            return False
+            return False, None, None
 
     def generate_test_items(self):
         """
