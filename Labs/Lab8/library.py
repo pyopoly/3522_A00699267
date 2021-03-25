@@ -11,6 +11,7 @@ from catalogue import Catalogue
 from ui import ConsoleUI
 from factory import FactoryMapper
 
+
 class Library:
     """
     The Library consists of a catalogue of items and provides an
@@ -27,8 +28,6 @@ class Library:
     def check_out_item(self):
         """
         Check out an item with the given call number from the library.
-        :param call_number: a string
-        :precondition call_number: a unique identifier
         """
         call_number = self._ui.get_call_num()
         item = self._item_catalogue.retrieve_item_by_call_number(call_number)
@@ -89,16 +88,15 @@ class Library:
         call_number = self._ui.get_call_num()
         found_item = self._item_catalogue.retrieve_item_by_call_number(call_number)
         if found_item:
-            print(f"Could not add item with call number "
-                  f"{found_item.call_number}. It already exists. ")
+            result, new_item = None, None
         else:
             new_item = FactoryMapper.create_item(call_number)
             if new_item:
                 self._item_catalogue.add_item(new_item)
-                print("item added successfully! item details:")
-                print(new_item, "\n")
+                result = True
             else:
-                print("item not added")
+                result = False
+        self._ui.print_add_item_result(result, call_number, new_item)
         self._ui.pause()
 
     def remove_item(self):

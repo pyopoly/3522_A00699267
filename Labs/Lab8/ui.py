@@ -45,6 +45,15 @@ class ConsoleUI:
         else:
             print(f"Could not find item with call number {call_number}. Return failed.")
 
+    def print_add_item_result(self, result, call_number, new_item):
+        if result:
+            print("item added successfully! item details:")
+            print(new_item, "\n")
+        elif result is False:
+            print("item not added")
+        elif result is None:
+            print(f"Could not add item with call number: {call_number}. It already exists. ")
+
     def print_remove_item_result(self, result, call_number, title):
         if result:
             print(f"Successfully removed {title} with call number: {call_number}")
