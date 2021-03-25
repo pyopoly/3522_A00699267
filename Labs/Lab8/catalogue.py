@@ -7,7 +7,7 @@ __author__ = "Jack Shih"
 __version__ = "Mar 2021"
 
 import difflib
-from library_item_generator import LibraryItemGenerator
+from library_item import LibraryItemGenerator
 
 
 class Catalogue:

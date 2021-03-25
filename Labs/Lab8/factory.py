@@ -25,6 +25,10 @@ class Factory(abc.ABC):
 
     @staticmethod
     def get_title_and_num_copies():
+        """
+        Get from the user the title and number of copies of a LibraryItem.
+        :return: (string, int)
+        """
         title = input("Enter title: ")
         num_copies = int(input("Enter number of copies (positive number): "))
         return title, num_copies
