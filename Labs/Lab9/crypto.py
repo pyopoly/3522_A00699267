@@ -1,8 +1,10 @@
-import des
+""" This module is run in the cmd line and it encrypts or decrypts string data with the specified key. """
+
+__author__ = "Jack Shih"
+__version__ = "Mar 2021"
+
 import argparse
-import abc
 import enum
-import ast
 from handlers import *
 
 
@@ -125,8 +127,8 @@ class Crypto:
         """
         execute_request(self, request: Request) This method accepts a request and starts executing
         the first handler in the appropriate chain.
-        :param request:
-        :return:
+        :param request: Request from cmd line args
+        :return: (str, bool) str: a message, bool True if validation is passed
         """
         if request.encryption_state == CryptoMode.EN:
             return self.encryption_start_handler.handle_request(request)
