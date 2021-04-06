@@ -124,7 +124,7 @@ class CityOverheadTimes:
             times.append(str(iss_pass))
         times = '\n'.join(times)
         return f"The ISS will pass over {self.city.city_name} " \
-            f"{len(self.passes)} times. The times are: \n {times}"
+            f"{len(self.passes)} times. The times are: \n{times}"
 
 
 class ISSDataRequest:
@@ -142,16 +142,24 @@ class ISSDataRequest:
     def get_overhead_pass(cls, city: City) -> CityOverheadTimes:
         pass
         # Write request code here!
-        response = requests.get("cdc")
+        response = requests.get(cls.OPEN_NOTIFY_OVERHEAD_PASS_URL + f"?lat={city.lat}&lon={city.lng}")
+        data = response.json()
         # DEBUG:
         # print(response)
         # jprint(data)
+        return CityOverheadTimes(city, *data['response'])
 
 
 def main():
-    city_db = CityDatabase("city_locations.xlsx")
-    print(city_db)
-    # ISSDataRequest.get_overhead_pass()
+    city_db = CityDatabase("city_locations_test.xlsx")
+    # print(city_db.city_db[0])
+    # c = City("Selkirk", 50.15, -96.8833)
+    # x = ISSDataRequest.get_overhead_pass(c)
+    # print(x)
+
+    for city in city_db.city_db:
+        print(ISSDataRequest.get_overhead_pass(city))
+        print()
 
 
 if __name__ == "__main__":
