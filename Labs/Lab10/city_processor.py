@@ -7,7 +7,8 @@ import requests
 import pandas
 import json
 import datetime
-
+import logging
+from producer_consumer import ProducerThread, ConsumerThread, CityOverheadTimeQueue
 
 def jprint(obj):
     """
@@ -140,7 +141,7 @@ class ISSDataRequest:
 
     @classmethod
     def get_overhead_pass(cls, city: City) -> CityOverheadTimes:
-        pass
+        print(f"ISSDataRequest for {city.city_name} with params: {{'lat:' {city.lat}, 'lon': {city.lng}}}\n", end="")
         # Write request code here!
         response = requests.get(cls.OPEN_NOTIFY_OVERHEAD_PASS_URL + f"?lat={city.lat}&lon={city.lng}")
         data = response.json()
@@ -151,15 +152,35 @@ class ISSDataRequest:
 
 
 def main():
-    city_db = CityDatabase("city_locations_test.xlsx")
-    # print(city_db.city_db[0])
-    # c = City("Selkirk", 50.15, -96.8833)
-    # x = ISSDataRequest.get_overhead_pass(c)
-    # print(x)
+    format = "%(asctime)s: %(message)s"
+    logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
-    for city in city_db.city_db:
-        print(ISSDataRequest.get_overhead_pass(city))
-        print()
+    overhead_time_queue = CityOverheadTimeQueue()
+    city_db = CityDatabase("city_locations_test.xlsx")
+    size = len(city_db.city_db)//3
+    city1 = city_db.city_db[:size]
+    city2 = city_db.city_db[size:size*2]
+    city3 = city_db.city_db[size*2:]
+
+    producer = ProducerThread(city1, overhead_time_queue, 1)
+    producer2 = ProducerThread(city2, overhead_time_queue, 2)
+    producer3 = ProducerThread(city3, overhead_time_queue, 3)
+    producer.start()
+    producer2.start()
+    producer3.start()
+
+    consumer = ConsumerThread(overhead_time_queue, 1)
+    # consumer2 = ConsumerThread(overhead_time_queue, 2)
+    consumer.start()
+    # consumer2.start()
+    producer.join()
+    producer2.join()
+    producer3.join()
+    logging.info("Producers finished")
+    consumer.data_incoming = False
+    # consumer2.data_incoming = False
+    consumer.join()
+    # consumer2.join()
 
 
 if __name__ == "__main__":

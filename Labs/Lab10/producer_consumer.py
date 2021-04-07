@@ -1,11 +1,39 @@
 import city_processor
-from threading import Thread
+from threading import Thread, Lock
 import time
+import logging
+import pstats, cProfile, io
+
+
+def profile(fnc):
+    """
+    An implementation of a function decorator that wraps a function in
+    a code that profiles it.
+    """
+
+    def inner(*args, **kwargs):
+        pr = cProfile.Profile()
+        pr.enable()
+
+        # wrapped function starts
+        retval = fnc(*args, **kwargs)  # fnc is whatever function has the @profile tag
+        # wrapped function ends
+
+        pr.disable()
+        s = io.StringIO()
+        sortby = pstats.SortKey.CALLS
+        ps = pstats.Stats(pr, stream=s).strip_dirs().sort_stats(sortby)
+        ps.print_stats()
+        print(s.getvalue())
+        return retval
+
+    return inner
 
 
 class CityOverheadTimeQueue:
     def __init__(self):
         self._data_queue = []
+        self.access_queue_lock = Lock()
 
     def put(self, overhead_time: city_processor.CityOverheadTimes) -> None:
         """
@@ -14,7 +42,9 @@ class CityOverheadTimeQueue:
         :param overhead_time: CityOverHeadTimes
         :return: None
         """
-        self._data_queue.append(overhead_time)
+        with self.access_queue_lock:
+            self._data_queue.append(overhead_time)
+            print("element added to the queue! Queue has %d elements" % len(self._data_queue))
 
     def get(self) -> city_processor.CityOverheadTimes:
         """
@@ -24,9 +54,15 @@ class CityOverheadTimeQueue:
         the other elements so there will be no empty spaces.
         :return:
         """
-        overhead_times = self._data_queue[0]
-        del self._data_queue[0]
+        with self.access_queue_lock:
+            overhead_times = self._data_queue[0]
+            del self._data_queue[0]
+            print("element removed from the queue! Queue has %d elements left" % len(self._data_queue))
         return overhead_times
+
+    @property
+    def queue(self):
+        return self._data_queue
 
     def __len__(self) -> int:
         """
@@ -37,7 +73,7 @@ class CityOverheadTimeQueue:
 
 
 class ProducerThread(Thread):
-    def __init__(self, cities: list, queue: CityOverheadTimeQueue):
+    def __init__(self, cities: list, queue: CityOverheadTimeQueue, name: int):
         """
         This method initializes the class with a list of City Objects as well as a CityOverheadTimeQueue.
         :param cities: list(City)
@@ -45,6 +81,7 @@ class ProducerThread(Thread):
         :return: None
         """
         super().__init__()
+        self._name = name
         self._cities = cities
         self._overhead_queue = queue
 
@@ -57,8 +94,9 @@ class ProducerThread(Thread):
         """
         for i, city in enumerate(self._cities, start=1):
             overhead_time = city_processor.ISSDataRequest.get_overhead_pass(city)
+            logging.info("Producer %d is adding to the queue", self._name)
             self._overhead_queue.put(overhead_time)
-            if i == 5:
+            if i % 5 == 0:
                 time.sleep(1)
 
 
@@ -66,7 +104,7 @@ class ConsumerThread(Thread):
     """
     The ConsumerThread is responsible for consuming data from the queue and printing it out to the console.
     """
-    def __init__(self, queue: CityOverheadTimeQueue):
+    def __init__(self, queue: CityOverheadTimeQueue, name: int):
         """
         Initializes the ConsumerThread with the same queue as the one the producer has. It also implements a
         data_incoming boolean attribute that is set to True. This attribute should change to False after the
@@ -75,6 +113,7 @@ class ConsumerThread(Thread):
         :return: None
         """
         super().__init__()
+        self._name = name
         self._queue = queue
         self.data_incoming = True
 
@@ -87,15 +126,18 @@ class ConsumerThread(Thread):
         """
         while self.data_incoming or len(self._queue):
             if not self._queue:
+                logging.info("Consumer %d is sleeping since queue is empty", self._name)
                 time.sleep(0.75)
             print(self._queue.get())
             time.sleep(0.5)
 
 
-
+# @profile
 def main():
-    city_db = city_processor.CityDatabase("city_locations_test.xlsx")
-    overhead_time_queue = CityOverheadTimeQueue()
+    pass
+    # format = "%(asctime)s: %(message)s"
+    # logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+    # overhead_time_queue = CityOverheadTimeQueue()
 
     # DEBUG CityOverheadTimeQueue
     # for city in city_db.city_db:
@@ -110,14 +152,6 @@ def main():
     # print(len(overhead_time_queue))
 
     # DEBUG ProducerThread ConsumerThread
-    producer = ProducerThread(city_db.city_db, overhead_time_queue)
-    consumer = ConsumerThread(overhead_time_queue)
-    producer.start()
-    consumer.start()
-    producer.join()
-    print("Producer finished")
-    consumer.data_incoming = False
-    consumer.join()
 
 
 if __name__ == "__main__":
