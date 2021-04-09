@@ -32,8 +32,12 @@ def profile(fnc):
 
 class CityOverheadTimeQueue:
     def __init__(self):
+        """
+        Creates a queue of CityOverheadTimes. Producers put CityOverheadTimes into the queue, while Consumers get
+        them from the queue.
+        """
         self._data_queue = []
-        self.access_queue_lock = Lock()
+        self._access_queue_lock = Lock()
 
     def put(self, overhead_time: city_processor.CityOverheadTimes) -> None:
         """
@@ -42,7 +46,7 @@ class CityOverheadTimeQueue:
         :param overhead_time: CityOverHeadTimes
         :return: None
         """
-        with self.access_queue_lock:
+        with self._access_queue_lock:
             self._data_queue.append(overhead_time)
             print("element added to the queue! Queue has %d elements" % len(self._data_queue))
 
@@ -54,15 +58,11 @@ class CityOverheadTimeQueue:
         the other elements so there will be no empty spaces.
         :return:
         """
-        with self.access_queue_lock:
+        with self._access_queue_lock:
             overhead_times = self._data_queue[0]
             del self._data_queue[0]
             print("element removed from the queue! Queue has %d elements left" % len(self._data_queue))
         return overhead_times
-
-    @property
-    def queue(self):
-        return self._data_queue
 
     def __len__(self) -> int:
         """

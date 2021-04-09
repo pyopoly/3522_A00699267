@@ -8,7 +8,8 @@ import pandas
 import json
 import datetime
 import logging
-from producer_consumer import ProducerThread, ConsumerThread, CityOverheadTimeQueue
+import producer_consumer
+
 
 def jprint(obj):
     """
@@ -155,32 +156,35 @@ def main():
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
-    overhead_time_queue = CityOverheadTimeQueue()
-    city_db = CityDatabase("city_locations_test.xlsx")
-    size = len(city_db.city_db)//3
-    city1 = city_db.city_db[:size]
-    city2 = city_db.city_db[size:size*2]
-    city3 = city_db.city_db[size*2:]
+    overhead_time_queue = producer_consumer.CityOverheadTimeQueue()
+    try:
+        city_db = CityDatabase("city_locations.xlsx")
+        size = len(city_db.city_db)//3
+        city1 = city_db.city_db[:size]
+        city2 = city_db.city_db[size:size*2]
+        city3 = city_db.city_db[size*2:]
 
-    producer = ProducerThread(city1, overhead_time_queue, 1)
-    producer2 = ProducerThread(city2, overhead_time_queue, 2)
-    producer3 = ProducerThread(city3, overhead_time_queue, 3)
-    producer.start()
-    producer2.start()
-    producer3.start()
+        producer = producer_consumer.ProducerThread(city1, overhead_time_queue, 1)
+        producer2 = producer_consumer.ProducerThread(city2, overhead_time_queue, 2)
+        producer3 = producer_consumer.ProducerThread(city3, overhead_time_queue, 3)
+        producer.start()
+        producer2.start()
+        producer3.start()
 
-    consumer = ConsumerThread(overhead_time_queue, 1)
-    # consumer2 = ConsumerThread(overhead_time_queue, 2)
-    consumer.start()
-    # consumer2.start()
-    producer.join()
-    producer2.join()
-    producer3.join()
-    logging.info("Producers finished")
-    consumer.data_incoming = False
-    # consumer2.data_incoming = False
-    consumer.join()
-    # consumer2.join()
+        consumer = producer_consumer.ConsumerThread(overhead_time_queue, 1)
+        # consumer2 = ConsumerThread(overhead_time_queue, 2)
+        consumer.start()
+        # consumer2.start()
+        producer.join()
+        producer2.join()
+        producer3.join()
+        logging.info("Producers finished")
+        consumer.data_incoming = False
+        # consumer2.data_incoming = False
+        consumer.join()
+        # consumer2.join()
+    except FileNotFoundError:
+        print("No such file found")
 
 
 if __name__ == "__main__":
